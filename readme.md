@@ -14,6 +14,8 @@ by default every object only understands "yes" and "no"
 
     from tnalagmes import TNaLaGmesConstruct
     
+    construct = TNaLaGmesConstruct()
+    
     print(construct.parse_command("no"))
     print(construct.parse_command("yes"))
     
