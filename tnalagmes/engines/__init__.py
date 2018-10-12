@@ -233,10 +233,9 @@ class TNaLaGmesEngine(TNaLaGmesConstruct):
 
     def parse_command(self, utterance):
         # parse intent
-        intent = self.calc_intents(utterance)
-        intent_name = intent.get("name", "unknown")
-        if intent_name in self.intents:
-            return self.intents[intent_name]()
+        answer = TNaLaGmesConstruct.parse_command(self, utterance)
+        if answer != "?":
+            return answer
         else:
             # fallback
             self.submit_command(utterance)
