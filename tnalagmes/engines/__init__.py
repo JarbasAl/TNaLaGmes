@@ -3,7 +3,8 @@ import random
 from threading import Thread
 from tnalagmes import TNaLaGmesConstruct
 from tnalagmes.data.template_data import TERMINOLOGY, RANDOM_EVENTS, GAME_EVENTS
-from tnalagmes.models import Player, Calendar, Inventory, ProgressTracker
+from tnalagmes.models.objects import Calendar, Inventory, ProgressTracker
+from tnalagmes.models.agents import Player
 from pprint import pprint
 from os.path import expanduser, join, exists
 from os import makedirs
@@ -232,7 +233,7 @@ class TNaLaGmesEngine(TNaLaGmesConstruct):
 
     def parse_command(self, utterance):
         # parse intent
-        intent = self.calc_intent(utterance)
+        intent = self.calc_intents(utterance)
         intent_name = intent.get("name", "unknown")
         if intent_name in self.intents:
             return self.intents[intent_name]()

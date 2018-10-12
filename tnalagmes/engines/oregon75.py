@@ -559,7 +559,7 @@ class Oregon75Engine(TNaLaGmesEngine):
 
     def parse_command(self, utterance):
         # parse intent
-        intent = self.calc_intent(utterance)
+        intent = self.calc_intents(utterance)
         intent_name = intent.get("name", "unknown")
         if intent_name in self.intents:
             self.intents[intent_name]()

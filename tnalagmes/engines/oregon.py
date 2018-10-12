@@ -1,6 +1,6 @@
 from random import random, choice, randint
 from tnalagmes.data.oregon_trail_data import TERMINOLOGY, RANDOM_EVENTS, GAME_EVENTS
-from tnalagmes.models import Calendar, InventoryItem, ProgressTracker
+from tnalagmes.models.objects import Calendar, InventoryItem, ProgressTracker
 from tnalagmes import TNaLaGmesConstruct
 from tnalagmes.engines import TNaLaGmesEngine
 
@@ -651,7 +651,7 @@ class OregonEngine(TNaLaGmesEngine):
 
     def parse_command(self, utterance):
         # parse intent
-        intent = self.calc_intent(utterance)
+        intent = self.calc_intents(utterance)
         intent_name = intent.get("name", "unknown")
         if intent_name in self.intents:
             self.intents[intent_name]()
