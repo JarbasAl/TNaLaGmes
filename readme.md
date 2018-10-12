@@ -148,6 +148,13 @@ Once again this is not necessarily meant for games, they are just an awesome use
 
 # TNaLaGmesEngine
 
+This is the base structure to build games out off
+
+    save
+    load
+    quit
+    what game is this
+    
 All engines start by asking you
 
         Do you need instructions?
@@ -165,10 +172,12 @@ Using the engine! just import it and override on_turn
     
         def on_turn(self):
             # main loop
-    
-   
+            pass
+     
 
 Run it!
+
+Turn based, but turns are defined by a calendar object that by default tracks real date and start disabled
 
         class TemplateGame(TNaLaGmesEngine):
        
@@ -186,9 +195,8 @@ Run it!
                 game = TemplateGame()
                 game.play()
         
-Turn based, but turns are defined by a calendar object that by default tracks real date and start disabled
 
-There is a configurable maximum of turns before the engine exits, enabled if you change the game speed
+There is a configurable maximum of turns before the engine exits, enabled if you change the game speed, otherwise the engine runs forever
 
     Do you need instructions?
 
