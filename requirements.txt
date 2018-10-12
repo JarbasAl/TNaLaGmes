@@ -1,0 +1,8 @@
+padaos
+adapt-parser==0.3.0
+padatious==0.4.5
+fann2==1.0.7
+python-dateutil
+mtranslate
+requests
+psutil
