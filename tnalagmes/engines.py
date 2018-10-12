@@ -132,7 +132,7 @@ class TNaLaGmesEngine(TNaLaGmesConstruct):
 
     def on_game_over(self):
         # Turns have been exhausted or Oregon has been reached
-        if self.tracker.completed():
+        if self.tracker.completed:
             self.on_win()
         else:
             self.output = self.DATA["game_over"]["error"]

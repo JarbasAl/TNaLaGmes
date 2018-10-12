@@ -12,6 +12,13 @@ from tnalagmes import TNaLaGmesConstruct
 
 
 class ProgressTracker(TNaLaGmesConstruct):
+    """
+    "total distance"
+    "current mileage"
+    "add mileage"
+    "subtract mileage"
+    "are you completed?"
+    """
     def __init__(self):
         TNaLaGmesConstruct.__init__(self, "progress_tracker")
         self._total_distance = 2040
@@ -118,6 +125,8 @@ class Calendar(TNaLaGmesConstruct):
 
     @property
     def is_final_turn(self):
+        if not self._turn_delta:
+            return False
         if self._turn_count >= self._max_turns:
             return True
         else:
@@ -137,6 +146,11 @@ class Calendar(TNaLaGmesConstruct):
 
 
 class InventoryItem(TNaLaGmesConstruct):
+    """
+    what are you
+    what can you do
+    what is your name
+    """
     def __init__(self, name="thing", description="a thing", item_type="object"):
         TNaLaGmesConstruct.__init__(self, name)
         self._value = 0
@@ -160,6 +174,12 @@ class InventoryItem(TNaLaGmesConstruct):
 
 
 class Inventory(TNaLaGmesConstruct):
+    """
+    what do you have
+    how much money do you have
+    how much are you worth
+    spend X money
+    """
     def __init__(self, start_money=700):
         TNaLaGmesConstruct.__init__(self, "inventory")
         self.start_money = start_money
@@ -181,6 +201,13 @@ class Inventory(TNaLaGmesConstruct):
 
 
 class Ability(TNaLaGmesConstruct):
+    """
+    what is your name
+    what is your cost
+    what is your damage
+    what are you
+    generate some damage
+    """
     def __init__(self, name, cost, dmg, type):
         TNaLaGmesConstruct.__init__(self, "ability")
         self.name = name
@@ -195,6 +222,15 @@ class Ability(TNaLaGmesConstruct):
 
 
 class NPC(TNaLaGmesConstruct):
+    """
+    hello world
+    what is your name
+    attack
+    take damage
+    heal
+    spend mana
+    cast spell
+    """
     def __init__(self, name, health, mana=0, attack=1, magic=None, inventory=None):
         TNaLaGmesConstruct.__init__(self, "NPC")
         self.items = inventory or Inventory()
@@ -247,6 +283,15 @@ class NPC(TNaLaGmesConstruct):
 
 
 class Room(TNaLaGmesConstruct):
+    """
+    go up / down / left / right / front /back
+    go north / south / west / east ....
+    who is in the roon
+    items in the room
+    connected rooms
+    describe room
+    room name
+    """
     def __init__(self, name, description="empty room", items=None, npcs=None, directions=None):
         TNaLaGmesConstruct.__init__(self, "room")
         self.name = name
