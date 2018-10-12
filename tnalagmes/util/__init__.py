@@ -12,20 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from __future__ import absolute_import
 import re
-import socket
 import subprocess
-from os.path import join
 
 from threading import Thread
 from time import sleep
 
-import json
 import os.path
 import psutil
 from stat import S_ISREG, ST_MTIME, ST_MODE, ST_SIZE
-import requests
 import signal as sig
 from tnalagmes.util.log import LOG
 from tnalagmes.util.signal import *
@@ -42,14 +37,6 @@ def resolve_resource_file(res_name, lang="en-us"):
     then finally it will look for res_name in the 'mycroft/res'
     folder of the source code package.
 
-    Example:
-    With mycroft running as the user 'bob', if you called
-        resolve_resource_file('snd/beep.wav')
-    it would return either '/home/bob/.mycroft/snd/beep.wav' or
-    '/opt/mycroft/snd/beep.wav' or '.../mycroft/res/snd/beep.wav',
-    where the '...' is replaced by the path where the package has
-    been installed.
-
     Args:
         res_name (str): a resource path/name
     """
@@ -62,8 +49,13 @@ def resolve_resource_file(res_name, lang="en-us"):
     if os.path.isfile(filename):
         return filename
 
-    # Next look for /opt/mycroft/res/res_name
+    # Next look for ~/tnalagmes/res/res_name
     filename = os.path.expanduser("~/tnalagmes/res/" + res_name)
+    if os.path.isfile(filename):
+        return filename
+
+    # Next look for ~/tnalagmes/locale/lang/res_name
+    filename = os.path.expanduser("~/tnalagmes/locale/" + lang + "/" + res_name)
     if os.path.isfile(filename):
         return filename
 
@@ -85,6 +77,17 @@ def resolve_resource_file(res_name, lang="en-us"):
     if os.path.isfile(filename):
         return filename
 
+    # Let's check default internal file formats
+    if not filename.endswith(".voc") and not filename.endswith(".intent") and not filename.endswith(".rx"):
+        vocs = resolve_resource_file(filename+".voc")
+        if vocs:
+            return vocs
+        vocs = resolve_resource_file(filename+".intent")
+        if vocs:
+            return vocs
+        vocs = resolve_resource_file(filename+".rx")
+        if vocs:
+            return vocs
     return None  # Resource cannot be resolved
 
 
@@ -153,54 +156,6 @@ def read_dict(filename, div='='):
     return d
 
 
-def connected():
-    """ Check connection by connecting to 8.8.8.8, if this is
-    blocked/fails, Microsoft NCSI is used as a backup
-
-    Returns:
-        True if internet connection can be detected
-    """
-    return connected_dns() or connected_ncsi()
-
-
-def connected_ncsi():
-    """ Check internet connection by retrieving the Microsoft NCSI endpoint.
-
-    Returns:
-        True if internet connection can be detected
-    """
-    try:
-        r = requests.get('http://www.msftncsi.com/ncsi.txt')
-        if r.text == u'Microsoft NCSI':
-            return True
-    except Exception:
-        pass
-    return False
-
-
-def connected_dns(host="8.8.8.8", port=53, timeout=3):
-    """ Check internet connection by connecting to DNS servers
-
-    Returns:
-        True if internet connection can be detected
-    """
-    # Thanks to 7h3rAm on
-    # Host: 8.8.8.8 (google-public-dns-a.google.com)
-    # OpenPort: 53/tcp
-    # Service: domain (DNS/TCP)
-    try:
-        socket.setdefaulttimeout(timeout)
-        socket.socket(socket.AF_INET, socket.SOCK_STREAM).connect((host, port))
-        return True
-    except IOError:
-        try:
-            socket.socket(socket.AF_INET, socket.SOCK_STREAM).connect(
-                ("8.8.4.4", port))
-            return True
-        except IOError:
-            return False
-
-
 def curate_cache(directory, min_free_percent=5.0, min_free_disk=50):
     """Clear out the directory if needed
 
@@ -250,7 +205,7 @@ def curate_cache(directory, min_free_percent=5.0, min_free_disk=50):
                 return  # deleted enough!
 
 
-def get_cache_directory(domain=None):
+def get_cache_directory(dir=None, domain=None):
     """Get a directory for caching data
 
     This directory can be used to hold temporary caches of data to
@@ -265,11 +220,9 @@ def get_cache_directory(domain=None):
     Return:
         str: a path to the directory where you can cache data
     """
-    config = mycroft.configuration.Configuration.get()
-    dir = config.get("cache_path")
     if not dir:
         # If not defined, use /tmp/mycroft/cache
-        dir = os.path.join(tempfile.gettempdir(), "mycroft", "cache")
+        dir = os.path.join(tempfile.gettempdir(), "tnalagmes", "cache")
     return ensure_directory_exists(dir, domain)
 
 
@@ -301,29 +254,6 @@ def wait_for_exit_signal():
             sleep(100)
     except KeyboardInterrupt:
         pass
-
-
-def create_echo_function(name, whitelist=None, blacklist=None):
-
-    def echo(message):
-        """Listen for messages and echo them for logging"""
-        try:
-            js_msg = json.loads(message)
-
-            if whitelist and js_msg.get("type") not in whitelist:
-                return
-
-            if blacklist and js_msg.get("type") in blacklist:
-                return
-
-            if js_msg.get("type") == "registration":
-                # do not log tokens from registration messages
-                js_msg["data"]["token"] = None
-                message = json.dumps(js_msg)
-        except Exception:
-            pass
-        LOG(name).debug(message)
-    return echo
 
 
 def camel_case_split(identifier: str) -> str:

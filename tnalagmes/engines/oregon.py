@@ -1,14 +1,8 @@
 from random import random, choice, randint
-from time import sleep
-
-from tnalagmes.data.template_data import TERMINOLOGY, RANDOM_EVENTS, GAME_EVENTS
+from tnalagmes.data.oregon_trail_data import TERMINOLOGY, RANDOM_EVENTS, GAME_EVENTS
 from tnalagmes.models import Calendar, InventoryItem, ProgressTracker
 from tnalagmes import TNaLaGmesConstruct
 from tnalagmes.engines import TNaLaGmesEngine
-from os.path import dirname, join, exists, expanduser
-from os import makedirs
-import json
-from pprint import pprint
 
 
 class TurnState(TNaLaGmesConstruct):
@@ -74,19 +68,21 @@ class Inventory(TNaLaGmesConstruct):
     def spend(self, cost):
         self._money -= int(cost)
 
-    def print_warnings(self):
+    @property
+    def warnings(self):
         if self.supplies.value < 12:
-            print(GAME_EVENTS["low_supplies"]["intro"])
+            return GAME_EVENTS["low_supplies"]["intro"]
 
-    def print_inventory(self):
-        print('{0:8}|{1:9}|{2:10}|{3:14}|{4:6}|'.format(self.get_entity("supplies"),
+    @property
+    def pretty_inventory(self):
+        text = '{0:8}|{1:9}|{2:10}|{3:14}|{4:6}|'.format(self.get_entity("supplies"),
                                                         self.get_entity("ammunition"),
                                                         self.get_entity("armour"),
                                                         self.get_entity("medicine"),
-                                                        self.get_entity("currency")))
-        print(
-            '{0:7} |{1:8} |{2:9} |{3:13} |{4:5} |'.format(self.supplies.value, self.ammunition.value, self.armour.value,
-                                                          self.medicine.value, self._money))
+                                                        self.get_entity("currency"))
+        text += '{0:7} |{1:8} |{2:9} |{3:13} |{4:5} |'.format(self.supplies.value, self.ammunition.value,
+                                                              self.armour.value, self.medicine.value, self._money)
+        return text
 
     def normalize_negative_values(self):
         if self.fuel.value < 0:
@@ -102,10 +98,8 @@ class Inventory(TNaLaGmesConstruct):
 
 
 class OregonEngine(TNaLaGmesEngine):
-    """ so called because logic is ported from 1978 basic version of oregon trail"""
-    # TODO oregon75 https://www.filfre.net/misc/oregon1975.bas
-    # TODO oregon78 https://www.filfre.net/misc/oregon1978.bas
-
+    """ so called because logic is based on oregon trail"""
+    # TODO, bellow is old code from oregon75
     TERMINOLOGY = TERMINOLOGY
     DATA = GAME_EVENTS
     RANDOM_EVENTS = RANDOM_EVENTS
@@ -117,6 +111,14 @@ class OregonEngine(TNaLaGmesEngine):
         self.inventory = Inventory()
         if from_json:
             self.import_game_data()
+
+    @property
+    def chance_encounter_seed(self):
+        # The convoluted original logic for a rider attack: RND(0)*10>((M/100-4)^2+72)/((M/100-4)^2+12)-1
+        return (random.random() * 10) > ((
+                                          self.tracker.mileage / 100.0 - 4) ** 2 + 72) / (
+                       (
+                               self.tracker.mileage / 100.0 - 4) ** 2 + 12) - 1
 
     def register_default_intents(self):
         # engine interface
@@ -356,18 +358,18 @@ class OregonEngine(TNaLaGmesEngine):
                 self.turn.injured = False
 
     def on_turn(self):
-        self.output = self.calendar.pretty_date()
+        self.output = self.calendar.pretty_date
         self.inventory.normalize_negative_values()
 
         # Resolve health issues from the previous turn
         self.on_heal()
 
         # Show inventory status and mileage
-        self.inventory.print_warnings()
-        self.tracker.print_mileage()
+        self.output = self.inventory.warnings
+        self.output = "TOTAL MILEAGE IS" + str(self.tracker.mileage)
 
         # Ask for turn options
-        self.inventory.print_inventory()
+        self.output = self.inventory.pretty_inventory
         turn_response = self.ask_numeric(self.DATA["turn"]["intro"], 1, 3)
         if turn_response == 1:
             self.on_shop()

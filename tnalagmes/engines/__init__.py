@@ -2,6 +2,7 @@
 import random
 from threading import Thread
 from tnalagmes import TNaLaGmesConstruct
+from tnalagmes.data.template_data import TERMINOLOGY, RANDOM_EVENTS, GAME_EVENTS
 from tnalagmes.models import Player, Calendar, Inventory, ProgressTracker
 from pprint import pprint
 from os.path import expanduser, join, exists
@@ -10,6 +11,9 @@ import json
 
 
 class TNaLaGmesEngine(TNaLaGmesConstruct):
+    TERMINOLOGY = TERMINOLOGY
+    DATA = GAME_EVENTS
+    RANDOM_EVENTS = RANDOM_EVENTS
     name = "TNaLaGmesEngine"
 
     def __init__(self, start_health=1000, from_json=True):
@@ -24,6 +28,16 @@ class TNaLaGmesEngine(TNaLaGmesConstruct):
         self._thread = Thread(target=self._run)
         self._thread.setDaemon(True)
 
+    @classmethod
+    def get_entity(cls, text):
+        return random.choice(cls.TERMINOLOGY.get(text, [""]))
+
+    def pprint_data(self):
+        data = {"random_events": self.RANDOM_EVENTS,
+                "terminology": self.TERMINOLOGY,
+                "turn_data": self.DATA}
+        pprint(data)
+
     def register_default_intents(self):
         # engine interface
         self.register_intent("save", ["save {file}", "save"], self.handle_save)
@@ -31,14 +45,6 @@ class TNaLaGmesEngine(TNaLaGmesConstruct):
         self.register_intent("export", ["export {file}"], self.handle_export)
         self.register_intent("import", ["import {file}"], self.handle_import)
         self.register_intent("quit", ["quit", "exit", "shutdown", "abort"], self.handle_quit)
-
-    @property
-    def chance_encounter_seed(self):
-        # The convoluted original logic for a rider attack: RND(0)*10>((M/100-4)^2+72)/((M/100-4)^2+12)-1
-        return (random.random() * 10) > ((
-                                          self.tracker.mileage / 100.0 - 4) ** 2 + 72) / (
-                       (
-                               self.tracker.mileage / 100.0 - 4) ** 2 + 12) - 1
 
     def register_event(self, handler):
         self.random_events.append(handler)
@@ -95,13 +101,24 @@ class TNaLaGmesEngine(TNaLaGmesConstruct):
         self.output = self.DATA["intro"]["conclusion"]
 
     def on_turn(self):
-        pass
+        self.output = self.calendar.pretty_date
+
+        self.output = "total progress: " + str(self.tracker.mileage)
+
+        # progress for each turn
+        self.tracker.random_advance()
+
+        # Random thing happened
+        self.on_chance_encounter()
+
+        # Move to next turn
+        self.calendar.advance_date()
 
     def on_win(self):
         self.output = self.DATA["win"]["intro"]
         # self.output = "AFTER " + str(self.objective.total_distance) + " LONG MILES---HOORAY!!!!!")
         self.calendar.rollback_date(int(self.tracker.last_turn_fraction * self.calendar.days_per_turn))
-        self.calendar.print_date()
+        self.output = self.calendar.pretty_date
         self.inventory.print_inventory()
         self.output = self.DATA["win"]["conclusion"]
         self.playing = False
@@ -180,12 +197,6 @@ class TNaLaGmesEngine(TNaLaGmesConstruct):
             self.on_turn()
         self.on_game_over()
         self.playing = False
-
-    def pprint_data(self):
-        data = {"random_events": self.RANDOM_EVENTS,
-                "terminology": self.TERMINOLOGY,
-                "turn_data": self.DATA}
-        pprint(data)
 
     def save(self, path=None):
         pass

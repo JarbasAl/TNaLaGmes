@@ -1,4 +1,4 @@
-from tnalagmes.oregonengine import OregonEngine
+from tnalagmes.engines.oregonengine import OregonEngine
 from tnalagmes.data.zombie_survival_data import GAME_EVENTS, RANDOM_EVENTS, TERMINOLOGY
 
 

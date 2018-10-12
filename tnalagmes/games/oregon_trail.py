@@ -1,4 +1,4 @@
-from tnalagmes.oregonengine import OregonEngine
+from tnalagmes.engines.oregon import OregonEngine
 from tnalagmes.data.oregon_trail_data import GAME_EVENTS, RANDOM_EVENTS, TERMINOLOGY
 from random import choice
 

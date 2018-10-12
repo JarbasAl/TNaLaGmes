@@ -18,7 +18,7 @@ from datetime import datetime
 from dateutil.tz import gettz, tzlocal
 
 
-def default_timezone(use_local=True):
+def default_timezone():
     """ Get the default timezone
 
     Based on user location settings location.timezone.code or
@@ -27,21 +27,8 @@ def default_timezone(use_local=True):
     Returns:
         (datetime.tzinfo): Definition of the default timezone
     """
-    if use_local:
-        # Just go with system default timezone
-        return tzlocal()
-    try:
-        # Obtain from user's configurated settings
-        #   location.timezone.code (e.g. "America/Chicago")
-        #   location.timezone.name (e.g. "Central Standard Time")
-        #   location.timezone.offset (e.g. -21600000)
-        from mycroft.configuration import Configuration
-        config = Configuration.get()
-        code = config["location"]["timezone"]["code"]
-
-        return gettz(code)
-    except Exception:
-        default_timezone(use_local=True)
+    # Just go with system default timezone
+    return tzlocal()
 
 
 def now_utc():

@@ -29,9 +29,9 @@ class ProgressTracker(TNaLaGmesConstruct):
         self.medium_difficulty = False
         self.hard_difficulty = False
 
-    def random_advance(self, fuel):
+    def random_advance(self, seed=150):
         # original logic from oregon trail
-        self.last_advance = int(200 + (fuel.value - 220) / 5 + 10 * random.random())
+        self.last_advance = int(200 + (seed - 220) / 5 + 10 * random.random())
         self.mileage += self.last_advance
 
     # this function should only be used for increases in mileage
@@ -150,6 +150,7 @@ class InventoryItem(TNaLaGmesConstruct):
     what are you
     what can you do
     what is your name
+    how much are you worth
     """
     def __init__(self, name="thing", description="a thing", item_type="object"):
         TNaLaGmesConstruct.__init__(self, name)

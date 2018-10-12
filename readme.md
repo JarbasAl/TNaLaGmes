@@ -54,8 +54,43 @@ There are input and output buffers for async communication and these are accesse
     print(construct.output)  # hello world\nhow are you?   # \n was added
     print(construct.output)  # empty
     
+
+# Default Vocabulary
  
+Vocab files can be found at /tnalagmes/locale/en-us, these provide a baseline terminology so you can start making adapt rules right away!
+
+You can also hard code the intents if you prefer
  
+    └── en-us
+        ├── back.voc
+        ├── cancel.voc
+        ├── down.voc
+        ├── drop.voc
+        ├── east.voc
+        ├── front.voc
+        ├── get.voc
+        ├── go.voc
+        ├── left.voc
+        ├── load.voc
+        ├── look.voc
+        ├── northeast.voc
+        ├── north.voc
+        ├── northwest.voc
+        ├── no.voc
+        ├── question.voc
+        ├── quit.voc
+        ├── right.voc
+        ├── room.voc
+        ├── save.voc
+        ├── southeast.voc
+        ├── south.voc
+        ├── southwest.voc
+        ├── talk.voc
+        ├── up.voc
+        ├── west.voc
+        ├── world.voc
+        └── yes.voc
+
 ##### YOU REACHED A CONSTRUCTION AREA, NOTHING IS COMPLETE 
 
    
@@ -224,6 +259,23 @@ There is a configurable maximum of turns before the engine exits, enabled if you
     29, Oct 2018
     30, Oct 2018
 
+
+Engines also have an internal progress tracker object
+
+Let's make something more interesting and async, don't get tripped up by the output variable weird behaviour, you may use += if you find it confusing
+
+        def on_turn(self):
+            self.output = self.calendar.pretty_date
+              
+            # track/advanced progress for each turn
+            self.output = "total progress: " + str(self.tracker.mileage)
+            self.tracker.random_advance()
+    
+            # Random thing happened
+            self.on_chance_encounter()
+    
+            # Move to next turn
+            self.calendar.advance_date()
   
 # OregonEngine
 
@@ -243,17 +295,17 @@ Differences between Oregon75 and Oregon78 are minimal
 
 Adventure Games in the infocom spirit
 
-# TextBattle
+# TextWarrior
 
 Turn Based battle games, pokemon style battle
 
-# TextRPG
+# IntentWorld
 
 Open World Text Rpg Games, a rpg world for you to populate with objects
 
 ## Game Design
 
-You see where this is going, objects are inteligent, engines are intelligent, everything can be interacted with
+You see where this is going, objects are intelligent, engines are intelligent, everything can be interacted with
 
 Suggestions/Issues/PRs for more engines or object models accepted
 

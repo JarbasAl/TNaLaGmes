@@ -1,11 +1,12 @@
 from padatious import IntentContainer
-from tnalagmes.data.template_data import TERMINOLOGY, RANDOM_EVENTS, GAME_EVENTS
+
 from time import sleep
 import time
 import random
 from difflib import SequenceMatcher
 from tnalagmes.util.time import now_local
 from tnalagmes.util.log import LOG
+from tnalagmes.util import resolve_resource_file
 from pprint import pprint
 from tnalagmes.lang.parse_en import *
 from tnalagmes.lang.parse_es import *
@@ -20,15 +21,13 @@ from adapt.intent import IntentBuilder
 from adapt.engine import IntentDeterminationEngine
 from adapt.context import ContextManagerFrame
 from os import makedirs
+import json
 
 
 class TNaLaGmesConstruct(object):
     cache_dir = join(expanduser("~"), "tnalagmes", "intent_cache")
     if not exists(cache_dir):
         makedirs(cache_dir)
-    TERMINOLOGY = {}
-    DATA = GAME_EVENTS
-    RANDOM_EVENTS = {}
 
     def __init__(self, object_type="tnalagmes_object", adapt=None):
         self.adapt = adapt or IntentDeterminationEngine()
@@ -42,12 +41,6 @@ class TNaLaGmesConstruct(object):
         self.waiting_for_user = False
         self._output = ""
         self.input = ""
-
-    def pprint_data(self):
-        data = {"random_events": self.RANDOM_EVENTS,
-                "terminology": self.TERMINOLOGY,
-                "turn_data": self.DATA}
-        pprint(data)
 
     @staticmethod
     def fuzzy_match(x, against):
@@ -234,10 +227,6 @@ class TNaLaGmesConstruct(object):
         self._output = ""
         return out
 
-    @classmethod
-    def get_entity(cls, text):
-        return random.choice(cls.TERMINOLOGY.get(text, [""]))
-
     def manual_fix_parse(self, text):
         # TODO replace vars
         return text
@@ -274,15 +263,15 @@ class TNaLaGmesConstruct(object):
         try:
             value = int(response)
         except ValueError:
-            self.output = self.DATA["numeric"]["error"]
+            self.output = "impossible!"
             return self.ask_numeric(prompt, lower_bound, upper_bound)
         if lower_bound is not None:
             if value < lower_bound:
-                self.output=self.DATA["numeric"]["low"]
+                self.output = str(response) + " is too low"
                 return self.ask_numeric(prompt, lower_bound, upper_bound)
         if upper_bound is not None:
             if value > upper_bound:
-                self.output=self.DATA["numeric"]["high"]
+                self.output = str(response) + " is too high"
                 return self.ask_numeric(prompt, lower_bound, upper_bound)
         return value
 
@@ -305,10 +294,8 @@ class TNaLaGmesConstruct(object):
         return "you sound negative"
 
     def register_core_intents(self):
-        self.register_keyword_intent("yes", ["yes", "affirmative", "correct", "agree", "agreed", "confirm", "y", "right"],
-                                     handler=self.handle_yes)
-        self.register_keyword_intent("no", ["no", "negative", "incorrect", "disagree", "disagreed", "abort", "n", "wrong"],
-                                     handler=self.handle_no)
+        self.register_keyword_intent("yes",  handler=self.handle_yes)
+        self.register_keyword_intent("no", handler=self.handle_no)
 
     def calc_intent(self, utterance, lang="en-us"):
         # check adapt
@@ -346,15 +333,45 @@ class TNaLaGmesConstruct(object):
         self.container.add_intent(name, samples)
         self.intents[name] = handler
 
-    def register_keyword_intent(self, name, samples=None, optionals=None, handler=None):
-        optionals = optionals or {}
-        samples = samples or {name: [name]}
+    @staticmethod
+    def load_resource(name, sep="\n", is_json=False):
+        path = resolve_resource_file(name)
+        if path and exists(path):
+            with open(path, "r") as f:
+                lines = f.read()
+                if is_json:
+                    return json.loads(lines)
+                return lines.split(sep)
+        return None
+
+    def register_keyword_intent(self, name, samples=None, optionals=None, handler=None, ignore_default_kw=False):
+        optionals = optionals or []
+        samples = samples or [name]
         intent_name = self.object_type + ':' + name
         intent = IntentBuilder(intent_name)
+
         if samples and isinstance(samples, list):
             samples = {samples[0]: samples}
         if optionals and isinstance(optionals, list):
             optionals = {optionals[0]: optionals}
+
+        if not ignore_default_kw:
+            data = self.load_resource(name)
+            if data:
+                # merge file data
+                for new in data:
+                    if new not in samples[name]:
+                        samples[name].append(new)
+
+            for optional in optionals:
+                data = self.load_resource(optional)
+                if data:
+                    # merge file data
+                    for new in data:
+                        optionals[optional] = optionals[optional] or []
+                        if new not in optionals[optional]:
+                            optionals[optional].append(new)
+
         for required in samples:
             for kw in samples[required]:
                 self.adapt.register_entity(required, kw)
