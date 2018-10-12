@@ -296,7 +296,7 @@ class TNaLaGmesConstruct(object):
         self.register_keyword_intent("yes",  handler=self.handle_yes)
         self.register_keyword_intent("no", handler=self.handle_no)
 
-    def calc_intent(self, utterance, lang="en-us"):
+    def calc_intents(self, utterance, lang="en-us"):
         return self.intent_parser.calc_intent(utterance)
 
     def register_intent(self, name, samples, handler=None):
@@ -318,11 +318,11 @@ class TNaLaGmesConstruct(object):
 
     def parse_command(self, utterance):
         # parse intent
-        intent = self.calc_intent(utterance)
-        intent_name = intent.get("intent_type", "")
-        if intent_name in self.intents:
-            return self.intents[intent_name](intent)
-        return "?"
+        intents = self.calc_intents(utterance)
+        text = ""
+        for intent in intents:
+            text += self.intent_parser.execute_intent(intent) + ".\n"
+        return text or "?"
 
 
 

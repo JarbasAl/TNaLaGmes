@@ -239,7 +239,7 @@ class TNaLaGmesPadatiousIntentParser(TNaLaGmesFuzzyIntentParser):
         self.engine = IntentContainer(TNaLaGmesConstruct.cache_dir)
 
     def calc_intent(self, utterance, lang="en-us"):
-        best_intent = self.engine.calc_intent(utterance)
+        best_intent = self.engine.calc_intents(utterance)
         if best_intent and best_intent.get('conf', 0.0) > 0.0:
             best_intent["intent_engine"] = "padatious"
             return best_intent
@@ -291,6 +291,13 @@ class TNaLaGmesIntentContainer(object):
         # train registered intents
         for engine in self.engine_list:
             engine.learn()
+
+    def execute_intent(self, intent):
+        name = intent.get("name", "")
+        for engine in self.engine_list:
+            if name in engine.intents:
+                return engine.intents[name](intent)
+        return "?"
 
     def calc_intent(self, utterance, lang="en-us"):
 
