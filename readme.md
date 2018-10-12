@@ -2,7 +2,7 @@
 
 TNaLaGmes is a Toolbox for Natural Language Games
 
-I asked myself, what if every game object could talk to you with natural language?
+I asked myself, what if random python objects could talk to you using only natural language?
 
 TNaLaGmes is a library that provides tools and default models for a variety of constructs, it was made thinking about games, but it really is about text enabling random code constructs!
 
