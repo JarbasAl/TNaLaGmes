@@ -9,3 +9,16 @@ TNaLaGmes is a library that provides tools and default models for a variety of c
 
 [Read the Wiki](https://github.com/JarbasAl/TNaLaGmes/wiki)
 
+early alpha version on pip
+
+## install
+
+    pip install TNaLaGmes
+
+
+## Usage
+
+    from tnalagmes.games import OregonTrail
+    
+    game = OregonTrail()
+    game.play()
