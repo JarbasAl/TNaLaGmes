@@ -25,8 +25,6 @@ class Ability(TNaLaGmesConstruct):
             what is your damage
             generate some damage
         """
-        self.register_keyword_intent("yes",  handler=self.handle_yes)
-        self.register_keyword_intent("no", handler=self.handle_no)
         self.register_keyword_intent("_name",
                                      required="_name",
                                      optionals=["question", "you"],

@@ -39,8 +39,6 @@ class ProgressTracker(TNaLaGmesConstruct):
             "yes"
             "no"
         """
-        self.register_keyword_intent("yes",  handler=self.handle_yes)
-        self.register_keyword_intent("no", handler=self.handle_no)
         self.register_keyword_intent("total_distance",
                                      required=["total", "distance"],
                                      optionals=["question"],
@@ -154,9 +152,6 @@ class Calendar(TNaLaGmesConstruct):
 
 
         """
-        self.register_keyword_intent("yes", handler=self.handle_yes)
-        self.register_keyword_intent("no", handler=self.handle_no)
-
         return
 
 
@@ -303,9 +298,6 @@ class InventoryItem(TNaLaGmesConstruct):
             what can you do
             how much are you worth
         """
-        self.register_keyword_intent("yes",  handler=self.handle_yes)
-        self.register_keyword_intent("no", handler=self.handle_no)
-
         return
 
 
@@ -360,9 +352,6 @@ class Inventory(TNaLaGmesConstruct):
             how much money do you have
             how much are you worth
         """
-        self.register_keyword_intent("yes",  handler=self.handle_yes)
-        self.register_keyword_intent("no", handler=self.handle_no)
-
         return
 
         self.register_keyword_intent("content",

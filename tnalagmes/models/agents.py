@@ -36,8 +36,6 @@ class NPC(TNaLaGmesConstruct):
             take damage
             spend mana
         """
-        self.register_keyword_intent("yes",  handler=self.handle_yes)
-        self.register_keyword_intent("no", handler=self.handle_no)
         self.register_intent("name", samples=[],
                              handler=self.handle_total_distance)
         self.register_keyword_intent("name",

@@ -286,15 +286,8 @@ class TNaLaGmesConstruct(object):
     def register_default_intents(self):
         pass
 
-    def handle_yes(self, intent):
-        return "you sound positive"
-
-    def handle_no(self, intent):
-        return "you sound negative"
-
     def register_core_intents(self):
-        self.register_keyword_intent("yes",  handler=self.handle_yes)
-        self.register_keyword_intent("no", handler=self.handle_no)
+        pass
 
     def calc_intents(self, utterance, lang="en-us"):
         return self.intent_parser.calc_intent(utterance)
@@ -321,7 +314,7 @@ class TNaLaGmesConstruct(object):
         intents = self.calc_intents(utterance)
         text = ""
         for intent in intents:
-            text += self.intent_parser.execute_intent(intent) + ".\n"
+            text += self.intent_parser.execute_intent(intent)
         return text or "?"
 
 

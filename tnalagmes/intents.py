@@ -65,7 +65,6 @@ class TNaLaGmesFuzzyIntentParser(object):
                 if score > best_score:
                     best_score = score
                     best_match = s
-
         if best_score < 0.5:
             return None
         intent = {"conf": best_score,
@@ -76,6 +75,7 @@ class TNaLaGmesFuzzyIntentParser(object):
     def register_intent(self, name, samples=None, handler=None,
                         ignore_defaults=False):
         samples = self._normalize_samples_input(name, samples, ignore_defaults)
+        name = "Fuzzy:" + name
         self.samples[name] = samples
         self.samples[name] = [TNaLaGmesConstruct.normalize(s) for s in
                               self.samples[name]]
@@ -293,9 +293,10 @@ class TNaLaGmesIntentContainer(object):
             engine.learn()
 
     def execute_intent(self, intent):
-        name = intent.get("_name", "")
+        name = intent.get("intent_name", "engine:name")
         for engine in self.engine_list:
-            if name in engine.intents:
+            if engine.intents.get(name):
+
                 return engine.intents[name](intent)
         return "?"
 
@@ -322,6 +323,7 @@ class TNaLaGmesIntentContainer(object):
 
     def chose_best_intent(self, utterance, intent_list):
         intent_list = [i for i in intent_list if i]
+        best_intent = None
         if not len(intent_list):
             return None, 0
         elif len(intent_list) == 1:
@@ -329,14 +331,20 @@ class TNaLaGmesIntentContainer(object):
         else:
             # TODO simulate triggering and evaluate best instead
             # unless padatious is fairly sure chose adapt
-            # todo check intent engine type dont assume order
-            best_intent = intent_list[0]
-            score = intent_list[1].get("conf") or intent_list[1].get(
-                "confidence")
-            if score > 0.85:
-                best_intent = intent_list[1]
+            for inte in intent_list:
+                if inte.get("intent_engine", "") == "adapt":
+                    best_intent = inte
+                    break
+            for inte in intent_list:
+                if inte.get("intent_engine", "") == "padatious":
+                    score = inte.get("conf") or inte[1].get("confidence")
+                    if score > 0.9:
+                        best_intent = inte
+            # choose randomly
+            if best_intent is None:
+                best_intent = random.choice(intent_list)
 
-        # best_intent = random.choice(intent_list)  # insert randomness?e
+        # best_intent = random.choice(intent_list)  # insert randomness?
         score = best_intent.get("conf") or best_intent.get("confidence")
         return best_intent, score
 
@@ -346,6 +354,7 @@ class TNaLaGmesIntentContainer(object):
         for command in commands:
             intents = []
             for engine in self.engine_list:
+
                 intents.append(engine.calc_intent(command, lang))
 
             best_intent, score = self.chose_best_intent(command, intents)

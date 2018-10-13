@@ -100,7 +100,7 @@ class TNaLaGmesEngine(TNaLaGmesConstruct):
 
     def on_random_event(self):
         event = random.choice(self.random_events)
-        self.output = event.trigger({})
+        self.output = event.trigger()
 
     @classmethod
     def get_entity(cls, text):
@@ -284,11 +284,24 @@ class TNaLaGmesEngine(TNaLaGmesConstruct):
         self.export_game_data(intent["file"])
         return "game data exported"
 
+    def ask_world(self, utterance):
+        # query all game objects
+        for obj in self.talking_objects:
+            # parse intent
+            answer = obj.parse_command(utterance)
+            if answer.strip().replace(".", "") != "?":
+                return answer
+        return "?"
+
+    @property
+    def talking_objects(self):
+        return []
+
     def parse_command(self, utterance):
         # parse intent
-        answer = TNaLaGmesConstruct.parse_command(self, utterance)
+        answer = self.ask_world(utterance)
 
-        if answer.strip().replace(".","") != "?":
+        if answer.strip().replace(".", "") != "?":
             return answer
         else:
             # fallback

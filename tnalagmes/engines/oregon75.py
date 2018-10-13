@@ -1,5 +1,5 @@
 import random
-from tnalagmes.data.template_data import TERMINOLOGY, RANDOM_EVENTS, GAME_EVENTS
+from tnalagmes.data.oregon_trail_data import TERMINOLOGY, RANDOM_EVENTS, GAME_EVENTS
 from tnalagmes.engines import TNaLaGmesEngine, Event
 from tnalagmes.engines.oregon import SimpleInventory, TurnState, Calendar
 from datetime import date
@@ -21,6 +21,10 @@ class Oregon75Engine(TNaLaGmesEngine):
 
         if from_json:
             self.import_game_data()
+
+    @property
+    def talking_objects(self):
+        return [self.inventory, self.turn, self.calendar, self.tracker]
 
     @property
     def chance_encounter_seed(self):
@@ -261,18 +265,24 @@ class Oregon75Engine(TNaLaGmesEngine):
                     self.output = self.DATA.get("heal", {}).get("die", "") + self.get_entity("passive_damage")
                 elif self.turn.injured:
                     self.output = self.DATA.get("heal", {}).get("die", "") + self.get_entity("attack_damage")
-                self.on_lose()
+                return False
             else:
                 self.output = self.DATA.get("heal", {}).get("conclusion", "")
                 self.turn.illness = False
                 self.turn.injured = False
 
+        return True
+
     def on_turn(self):
+        if not self.playing:
+            return
         self.output = self.calendar.pretty_date
         self.inventory.normalize_negative_values()
 
         # Resolve health issues from the previous turn
-        self.on_heal()
+        if not self.on_heal():
+            self.on_lose()
+            return
 
         # Show inventory status and mileage
         self.output = self.inventory.warnings
@@ -455,6 +465,14 @@ class Oregon75Engine(TNaLaGmesEngine):
         self.output = self.RANDOM_EVENTS.get("illness", {}).get("conclusion", "")
 
     # engine
+    def handle_yes(self, intent):
+        self.submit_command("yes")
+        return ""
+
+    def handle_no(self, intent):
+        self.submit_command("no")
+        return ""
+
     def manual_fix_parse(self, text):
         # replace vars
         text = text.replace("{inv.money}",

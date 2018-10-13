@@ -1,6 +1,6 @@
 import random
 from tnalagmes.data.template_data import TERMINOLOGY, RANDOM_EVENTS, GAME_EVENTS
-from tnalagmes.models.objects import Calendar, InventoryItem, ProgressTracker
+from tnalagmes.models.objects import Calendar, InventoryItem, ProgressTracker, Inventory
 from tnalagmes import TNaLaGmesConstruct
 from tnalagmes.engines import TNaLaGmesEngine
 
@@ -56,7 +56,7 @@ class TurnState(TNaLaGmesConstruct):
         return self._maintenance_state == 3
 
 
-class SimpleInventory(TNaLaGmesConstruct):
+class SimpleInventory(Inventory):
     TERMINOLOGY = TERMINOLOGY
 
     def __init__(self, start_money=700):
