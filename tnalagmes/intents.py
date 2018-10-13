@@ -16,19 +16,88 @@ class TNaLaGmesIntent(TNaLaGmesConstruct):
     what can you do
     how do i trigger you
     conflicting intents
-    what is your engine
+    what is your intent_engine
     how many entities matched
     """
 
-    def __init__(self, data):
+    def __init__(self, data=None):
+        data = data or {}
         TNaLaGmesConstruct.__init__(self)
         self.matches = []
         self.confidence = data.get("confidence") or data.get("conf")
-        self.engine = data.get("intent_engine")
+        self.intent_engine = data.get("intent_engine")
         self.intent_name = data.get("intent_name",
                                     "TNaLaGmesIntent:TestIntent")
         self.disambiguation = data.get("disambiguation", {})
         self.description = data.get("description")
+        self.handler = None
+        self.validator = None
+        self.required = []
+        self.optionals = []
+        self.samples = []
+        self.utterance = ""
+
+    def __getitem__(self, key):
+        return self.as_json.get(key)
+
+    def __setitem__(self, key, data):
+        updated = self.as_json
+        updated[key] = data
+        self.from_json(updated)
+
+    def __call__(self, *args, **kwargs):
+        if self.handler is not None:
+            # TODO if intent not in args inject self
+            return self.handler(*args, **kwargs)
+        raise AttributeError("intent handler not yet binded")
+
+    def bind_handler(self, handler):
+        self.handler = handler
+
+    def bind_validator(self, handler):
+        self.validator = handler
+
+    def from_json(self, data):
+        self.confidence = data.get("confidence") or data.get("conf")
+        self.intent_engine = data.get("intent_engine")
+        self.intent_name = data.get("intent_name",
+                                    "TNaLaGmesIntent:TestIntent")
+        self.disambiguation = data.get("disambiguation", {})
+        self.description = data.get("description")
+        self.samples = data.get("samples", [])
+        self.optionals = data.get("optionals", [])
+        self.required = data.get("required", [])
+        self.matches = data.get("matches", [])
+        self.utterance = data.get("utterance", "")
+        return self
+
+    @property
+    def as_json(self):
+        bucket = {}
+        bucket["confidence"] = self.confidence
+        bucket["intent_engine"] = self.intent_engine
+        bucket["intent_name"] = self.intent_name
+        bucket["disambiguation"] = self.disambiguation
+        bucket["description"] = self.description
+        bucket["samples"] = self.samples
+        bucket["optionals"] = self.optionals
+        bucket["required"] = self.required
+        bucket["matches"] = self.matches
+        bucket["utterance"] = self.utterance
+        return bucket
+
+    def can_solve(self, utterance):
+        """
+        when asked if you can solve this utterance return True or False
+        this step is called for disambiguation after an intent already matched
+
+        return True -> can solve utterance
+        return False -> can not solve utterance
+        """
+        if self.validator:
+            self.utterance = utterance
+            return self.validator(self)
+        return True
 
 
 # wrappers for intent engines
@@ -41,10 +110,20 @@ from os.path import join, dirname
 
 
 class TNaLaGmesBaseIntentParser(object):
+    name = "fuzzy"
+
     def __init__(self):
         self.engine = None
         self.intents = {}
         self.samples = {}
+
+    def build_intent(self, data, handler, validator):
+        intent = TNaLaGmesIntent()
+        intent.from_json(data)
+        intent.bind_handler(handler)
+        intent.bind_validator(validator)
+        self.intents[intent.intent_name] = intent
+        return intent
 
     def learn(self):
         """
@@ -72,18 +151,23 @@ class TNaLaGmesBaseIntentParser(object):
         if best_score < 0.5:
             return None
         intent = {"conf": best_score,
-                  "intent_engine": "fuzzymatch",
+                  "intent_engine": self.name,
                   "intent_name": best_match}
-        return intent
+        return self.intents.get(best_match, intent)
 
     def register_intent(self, name, samples=None, handler=None,
-                        ignore_defaults=False):
+                        ignore_defaults=False, validator=None):
         samples = self._normalize_samples_input(name, samples, ignore_defaults)
-        name = "Fuzzy:" + name
+        name = self.name + ":" + name
         self.samples[name] = samples
         self.samples[name] = [TNaLaGmesConstruct.normalize(s) for s in
                               self.samples[name]]
-        self.intents[name] = handler
+        data = {
+            "intent_engine": self.name,
+            "intent_name": name,
+            "samples": samples
+        }
+        return self.build_intent(data, handler, validator)
 
     @staticmethod
     def load_resource(name, sep="\n", is_json=False):
@@ -124,7 +208,7 @@ class TNaLaGmesBaseIntentParser(object):
             bucket = {}
             for r in optionals:
                 bucket[r] = [r]
-            optionals= bucket
+            optionals = bucket
 
         if not ignore_defaults:
             for req in required:
@@ -172,7 +256,7 @@ class TNaLaGmesBaseIntentParser(object):
         return samples
 
     def register_keyword_intent(self, name, required=None, optionals=None,
-                                handler=None, ignore_defaults=False):
+                                handler=None, ignore_defaults=False, validator=None):
         """
         rule based intent,
 
@@ -198,10 +282,12 @@ class TNaLaGmesBaseIntentParser(object):
         for optional in optionals:
             extended_sentence = min_sentence + " " + optional
             samples.append(extended_sentence)
-        self.register_intent(name, samples)
+        return self.register_intent(name, samples)
 
 
 class TNaLaGmesEntailmentIntentParser(TNaLaGmesBaseIntentParser):
+    name = "entailer"
+
     def match(self, utterance, sample):
         return textual_entailment(utterance, sample).get("entailment", 0)
 
@@ -220,12 +306,14 @@ class TNaLaGmesEntailmentIntentParser(TNaLaGmesBaseIntentParser):
         if best_score < 0.5:
             return None
         intent = {"conf": best_score,
-                  "intent_engine": "entailer",
+                  "intent_engine": self.name,
                   "intent_name": best_match}
         return intent
 
 
 class TNaLaGmesAdaptIntentParser(TNaLaGmesBaseIntentParser):
+    name = "adapt"
+
     def __init__(self):
         TNaLaGmesBaseIntentParser.__init__(self)
         self.engine = IntentDeterminationEngine()
@@ -253,20 +341,20 @@ class TNaLaGmesAdaptIntentParser(TNaLaGmesBaseIntentParser):
                 LOG.exception(e)
                 continue
         if best_intent and best_intent.get('confidence', 0.0) > 0.0:
-            best_intent["conf"] = best_intent["confidence"]
             best_intent["intent_engine"] = "adapt"
             best_intent["intent_name"] = best_intent["intent_type"]
-            best_intent.pop("confidence")
-
-            return best_intent
+            # cast into intent object
+            intent = self.intents.get(best_intent.get("intent_name", ""), best_intent)
+            intent.from_json(best_intent)
+            return intent
         return None
 
     def register_keyword_intent(self, name, required=None, optionals=None,
-                                handler=None, ignore_defaults=False):
+                                handler=None, ignore_defaults=False, validator=None):
         required, optionals = self._normalize_keyword_input(name, required,
                                                             optionals,
                                                             ignore_defaults)
-        intent_name = 'Adapt:' + name
+        intent_name = self.name + ':' + name
         intent = IntentBuilder(intent_name)
 
         for req in required:
@@ -278,10 +366,19 @@ class TNaLaGmesAdaptIntentParser(TNaLaGmesBaseIntentParser):
                 self.engine.register_entity(optional, kw)
             intent.optionally(optional)
         self.engine.register_intent_parser(intent.build())
-        self.intents[intent_name] = handler
+
+        data = {
+            "intent_engine": self.name,
+            "intent_name": intent_name,
+            "required": required,
+            "optionals": optionals
+        }
+        return self.build_intent(data, handler, validator)
 
 
 class TNaLaGmesPadatiousIntentParser(TNaLaGmesBaseIntentParser):
+    name = "padatious"
+
     def __init__(self):
         TNaLaGmesBaseIntentParser.__init__(self)
         self.engine = IntentContainer(TNaLaGmesConstruct.cache_dir)
@@ -289,8 +386,11 @@ class TNaLaGmesPadatiousIntentParser(TNaLaGmesBaseIntentParser):
     def calc_intent(self, utterance, lang="en-us"):
         best_intent = self.engine.calc_intent(utterance)
         if best_intent and best_intent.get('conf', 0.0) > 0.0:
-            best_intent["intent_engine"] = "padatious"
-            return best_intent
+            best_intent["intent_engine"] = self.name
+            # cast into intent object (update confidence in stored object)
+            intent = self.intents.get(best_intent.get("intent_name", ""), best_intent)
+            intent.from_json(best_intent)
+            return intent
         return None
 
     def learn(self):
@@ -298,14 +398,21 @@ class TNaLaGmesPadatiousIntentParser(TNaLaGmesBaseIntentParser):
         self.engine.train()
 
     def register_intent(self, name, samples=None, handler=None,
-                        ignore_defaults=False):
+                        ignore_defaults=False, validator=None):
         samples = self._normalize_samples_input(name, samples, ignore_defaults)
-        name = 'Padatious:' + name
-        self.engine.add_intent(name, samples)
-        self.intents[name] = handler
+        intent_name = self.name + ':' + name
+        self.engine.add_intent(intent_name, samples)
+        data = {
+            "intent_engine": self.name,
+            "intent_name": intent_name,
+            "samples": samples
+        }
+        return self.build_intent(data, handler, validator)
 
 
 class TNaLaGmesIntentContainer(object):
+    name = "TNaLaGmesIntentContainer"
+
     def __init__(self):
         self.engine_list = [
             TNaLaGmesAdaptIntentParser(),
@@ -341,25 +448,25 @@ class TNaLaGmesIntentContainer(object):
             engine.learn()
 
     def execute_intent(self, intent):
-        name = intent.get("intent_name", "engine:name")
+        if isinstance(intent, TNaLaGmesIntent):
+            if intent.handler is not None:
+                return intent.handler(intent)
+            name = intent.intent_name
+        else:
+            name = intent.get("intent_name", "intent_engine:name")
         for engine in self.engine_list:
-            if engine.intents.get(name):
-
-                return engine.intents[name](intent)
+            if engine.intents.get(name) and engine.intents[name].handler:
+                return engine.intents[name].handler(intent)
         return "?"
 
     def calc_intent(self, utterance, lang="en-us"):
 
         commands = self.extract_multiple_commands(utterance)
-        number = TNaLaGmesConstruct.extract_number(utterance)
         intents = []
         for best_intent in self.disambiguate(commands, lang):
             if not best_intent:
                 continue
             best_intent['utterance'] = utterance
-            if number:
-                best_intent["extracted_number"] = number
-            # TODO build TNaLaGmesIntent object
             intents.append(best_intent)
         # list of all intents to execute, there may be more than one
         return intents
@@ -371,30 +478,79 @@ class TNaLaGmesIntentContainer(object):
 
     def chose_best_intent(self, utterance, intent_list):
         intent_list = [i for i in intent_list if i]
-        best_intent = None
+
         if not len(intent_list):
             return None, 0
         elif len(intent_list) == 1:
             best_intent = intent_list[0]
         else:
-            # TODO simulate triggering and evaluate best instead
-            # unless padatious is fairly sure chose adapt
+            best_intent = None
+
+            # ask intents to simulate triggering
+            for idx, inte in enumerate(intent_list):
+                if isinstance(inte, dict):
+                    intent = TNaLaGmesIntent()
+                    intent.from_json(inte)
+                    inte = intent
+                inte.bind_validator(self.fetch_validator(inte))
+                if not inte.can_solve(utterance):
+                    intent_list[idx] = None
+
+            # prune list the maximum possible
+            intent_list = [i for i in intent_list if i]
+
+            # chose best adapt intent
+            best_score = 0
             for inte in intent_list:
-                if inte.get("intent_engine", "") == "adapt":
-                    best_intent = inte
-                    break
-            for inte in intent_list:
-                if inte.get("intent_engine", "") == "padatious":
-                    score = inte.get("conf") or inte[1].get("confidence")
-                    if score > 0.9:
+                if isinstance(inte, dict):
+                    intent = TNaLaGmesIntent()
+                    intent.from_json(inte)
+                    inte = intent
+                if inte.intent_engine == "adapt":
+                    score = inte.confidence or 0
+                    if score > best_score:
                         best_intent = inte
-            # choose randomly
+                        best_score = score
+
+            # unless padatious is fairly sure
+            best_score = 0
+            for inte in intent_list:
+                if isinstance(inte, dict):
+                    intent = TNaLaGmesIntent()
+                    intent.from_json(inte)
+                    inte = intent
+                if inte.intent_engine == "padatious":
+                    score = inte.confidence or 0
+                    if score > 0.9 and score > best_score:
+                        best_intent = inte
+                        best_score = score
+            # choose randomly (fuzzy intent_engine only by default)
             if best_intent is None:
                 best_intent = random.choice(intent_list)
 
-        # best_intent = random.choice(intent_list)  # insert randomness?
-        score = best_intent.get("conf") or best_intent.get("confidence")
-        return best_intent, score
+        # fetch handler
+        best_intent.bind_handler(self.fetch_handler(best_intent))
+        return best_intent
+
+    def fetch_handler(self, intent):
+        if isinstance(intent, dict):
+            intent = TNaLaGmesIntent().from_json(intent)
+        for engine in self.engine_list:
+            if engine.name == intent.intent_engine:
+                i = engine.intents.get(intent.intent_name)
+                if i:
+                    return i.handler
+        return None
+
+    def fetch_validator(self, intent):
+        if isinstance(intent, dict):
+            intent = TNaLaGmesIntent().from_json(intent)
+        for engine in self.engine_list:
+            if engine.name == intent.intent_engine:
+                i = engine.intents.get(intent.intent_name)
+                if i:
+                    return i.validator
+        return None
 
     def disambiguate(self, commands, lang="en-us"):
 
@@ -402,12 +558,9 @@ class TNaLaGmesIntentContainer(object):
         for command in commands:
             intents = []
             for engine in self.engine_list:
-
                 intents.append(engine.calc_intent(command, lang))
 
-            best_intent, score = self.chose_best_intent(command, intents)
-
-            yield best_intent
+            yield self.chose_best_intent(command, intents)
 
 
 class ContextManager(object):
