@@ -236,7 +236,7 @@ class TNaLaGmesConstruct(object):
             text = [t.strip() for t in text if t.strip()]
             text = random.choice(text)
         else:
-            if not text.strip():
+            if text is None or not text.strip():
                 return
         self._output += self.manual_fix_parse(text) + "\n"
 

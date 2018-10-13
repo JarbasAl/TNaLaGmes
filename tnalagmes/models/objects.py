@@ -1,5 +1,4 @@
 #!/usr/bin/python
-from datetime import date
 from datetime import timedelta
 from datetime import datetime
 import random
@@ -18,6 +17,7 @@ class ProgressTracker(TNaLaGmesConstruct):
     "add mileage"
     "subtract mileage"
     "are you completed?"
+    "current difficulty
     """
     def __init__(self):
         TNaLaGmesConstruct.__init__(self, "progress_tracker")
@@ -156,6 +156,10 @@ class Calendar(TNaLaGmesConstruct):
         """
         self.register_keyword_intent("yes", handler=self.handle_yes)
         self.register_keyword_intent("no", handler=self.handle_no)
+
+        return
+
+
         self.register_keyword_intent("advance",
                                      required=["date", "advance"],
                                      optionals=[],
@@ -235,8 +239,27 @@ class Calendar(TNaLaGmesConstruct):
         self._date -= timedelta(days=rollback_days)
 
     @property
+    def weekday(self):
+        day = self._date.weekday()
+        if day == 0:
+            return "Monday"
+        elif day == 1:
+            return "Tuesday"
+        elif day == 2:
+            return "Wednesday"
+        elif day == 3:
+            return "Thursday"
+        elif day == 4:
+            return "Friday"
+        elif day == 5:
+            return "Saturday"
+        elif day == 6:
+            return "Sunday"
+        return "What kind of calendar is this? "
+
+    @property
     def pretty_date(self):
-        return self._date.strftime('%d, %b %Y')
+        return self.weekday + " " + self._date.strftime('%d, %b %Y')
 
     @property
     def is_final_turn(self):
@@ -282,8 +305,12 @@ class InventoryItem(TNaLaGmesConstruct):
         """
         self.register_keyword_intent("yes",  handler=self.handle_yes)
         self.register_keyword_intent("no", handler=self.handle_no)
-        self.register_keyword_intent("name",
-                                     required="name",
+
+        return
+
+
+        self.register_keyword_intent("_name",
+                                     required="_name",
                                      optionals=["question", "you"],
                                      handler=self.handle_total_distance)
         self.register_keyword_intent("describe",
@@ -335,6 +362,9 @@ class Inventory(TNaLaGmesConstruct):
         """
         self.register_keyword_intent("yes",  handler=self.handle_yes)
         self.register_keyword_intent("no", handler=self.handle_no)
+
+        return
+
         self.register_keyword_intent("content",
                                      required="content",
                                      optionals=["question", "you"],

@@ -239,7 +239,7 @@ class TNaLaGmesPadatiousIntentParser(TNaLaGmesFuzzyIntentParser):
         self.engine = IntentContainer(TNaLaGmesConstruct.cache_dir)
 
     def calc_intent(self, utterance, lang="en-us"):
-        best_intent = self.engine.calc_intents(utterance)
+        best_intent = self.engine.calc_intent(utterance)
         if best_intent and best_intent.get('conf', 0.0) > 0.0:
             best_intent["intent_engine"] = "padatious"
             return best_intent
@@ -293,7 +293,7 @@ class TNaLaGmesIntentContainer(object):
             engine.learn()
 
     def execute_intent(self, intent):
-        name = intent.get("name", "")
+        name = intent.get("_name", "")
         for engine in self.engine_list:
             if name in engine.intents:
                 return engine.intents[name](intent)
@@ -305,6 +305,8 @@ class TNaLaGmesIntentContainer(object):
         number = TNaLaGmesConstruct.extract_number(utterance)
         intents = []
         for best_intent in self.disambiguate(commands, lang):
+            if not best_intent:
+                continue
             best_intent['normalized_utterance'] = utterance
             if number:
                 best_intent["extracted_number"] = number
@@ -319,7 +321,7 @@ class TNaLaGmesIntentContainer(object):
         return utterance.split(markers[0])
 
     def chose_best_intent(self, utterance, intent_list):
-
+        intent_list = [i for i in intent_list if i]
         if not len(intent_list):
             return None, 0
         elif len(intent_list) == 1:
@@ -374,7 +376,7 @@ class ContextManager(object):
         Args:
             entity(object): Format example...
                                {'data': 'Entity tag as <str>',
-                                'key': 'entity proper name as <str>',
+                                'key': 'entity proper _name as <str>',
                                 'confidence': <float>'
                                }
             metadata(object): dict, arbitrary metadata about entity injected

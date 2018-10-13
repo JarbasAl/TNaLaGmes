@@ -11,6 +11,72 @@ from os import makedirs
 import json
 
 
+class Event(TNaLaGmesConstruct):
+
+    def __init__(self, name="", intro="", conclusion="", handler=None):
+        TNaLaGmesConstruct.__init__(self, "event")
+        self._name = name
+        self._intro = intro
+        self._conclusion = conclusion
+        self.fields = {}
+        self._num_triggers = 0
+        self.event_handler = handler
+
+    @property
+    def num_triggers(self):
+        return self._num_triggers
+
+    @property
+    def name(self):
+        return self._name
+
+    @property
+    def intro(self):
+        return self._intro
+
+    @property
+    def conclusion(self):
+        return self._conclusion
+
+    def add_field(self, name, data=None):
+        # TODO set property
+        self.fields[name] = data
+
+    def from_json(self, data):
+        for k in data:
+            if k == "_name":
+                self._name = data[k]
+            elif k == "_intro":
+                self._intro = data[k]
+            elif k == "_conclusion":
+                self._conclusion = data[k]
+            else:
+                self.add_field(k, data[k])
+
+    @property
+    def data(self):
+        event_template = {
+
+            "_name": self._name,
+            "_intro": self._intro,
+            "_conclusion": self._conclusion
+        }
+        for field in self.fields:
+            event_template[field] = self.fields[field]
+        return event_template
+
+    def trigger(self, data=None):
+        if self.event_handler is not None:
+            return self.event_handler(data)
+
+        self.output = self.intro
+        self.output = self.conclusion
+        return self.output
+
+    def bind_handler(self, event_handler=None):
+        self.event_handler = event_handler
+
+
 class TNaLaGmesEngine(TNaLaGmesConstruct):
     TERMINOLOGY = TERMINOLOGY
     DATA = GAME_EVENTS
@@ -28,6 +94,10 @@ class TNaLaGmesEngine(TNaLaGmesConstruct):
         self.playing = False
         self._thread = Thread(target=self._run)
         self._thread.setDaemon(True)
+
+    def on_random_event(self):
+        event = random.choice(self.random_events)
+        self.output = event.trigger()
 
     @classmethod
     def get_entity(cls, text):
@@ -47,39 +117,33 @@ class TNaLaGmesEngine(TNaLaGmesConstruct):
         self.register_intent("import", ["import {file}"], self.handle_import)
         self.register_intent("quit", ["quit", "exit", "shutdown", "abort"], self.handle_quit)
 
-    def register_event(self, handler):
-        self.random_events.append(handler)
+    def register_event(self, event_object):
+        # TODO store in dict instead of list ?
+        if isinstance(event_object, Event):
+            self.random_events.append(event_object)
+        elif isinstance(event_object, dict):
+            self.register_from_json(event_object)
+        elif isinstance(event_object, str):
+            e = Event(intro=event_object)
+            self.random_events.append(e)
+        elif isinstance(event_object, list):
+            for e in event_object:
+                self.register_event(e)
+        elif isinstance(event_object, bool) or \
+                isinstance(event_object, int) or \
+                isinstance(event_object, float):
+            raise AttributeError("attempted to register invalid event")
+        else:
+            e = Event()
+            e.bind_handler(event_object)
+            self.random_events.append(e)
 
-    def register_from_json(self, dictionary,
-                           event_handler=None,
-                           damage_handler=None,
-                           death_handler=None):
-        event = {
-            "intro": dictionary.get("intro", ""),
-            "name": "",
-            "conclusion": dictionary.get("conclusion", ""),
-            "error": dictionary.get("error", ""),
-            "damage": dictionary.get("damage", ""),
-            "die": dictionary.get("die", ""),
-            "type": dictionary.get("type", "custom")
-        }
-
-        def handler():
-            intro = self.RANDOM_EVENTS.get(event["type"],
-                                           {}).get("intro",
-                                                   "")
-            self.output = intro
-            if event_handler is not None:
-                event_handler()
-            if damage_handler is not None:
-                damage_handler()
-            if death_handler is not None:
-                death_handler()
-            conclusion = self.RANDOM_EVENTS.get(
-                event["type"], {}).get("conclusion", "")
-            self.output = conclusion
-
-        self.register_event(handler)
+    def register_from_json(self, dictionary, event_handler=None):
+        event = Event()
+        event.from_json(dictionary)
+        if event_handler:
+            event.bind_handler(event_handler)
+        self.register_event(event)
 
     def register_events(self):
         """
@@ -89,17 +153,13 @@ class TNaLaGmesEngine(TNaLaGmesConstruct):
         """
         if self.from_json:
             for event_type in self.RANDOM_EVENTS:
-                event = self.RANDOM_EVENTS.get(event_type,
-                                               {})
-                name = list(event.keys())[0]
-                data = event[name]
-                data["name"] = name
-                data["type"] = event_type
-                self.register_from_json(dictionary=data)
+                event = Event()
+                event.from_json(self.RANDOM_EVENTS.get(event_type, {}))
+                self.register_event(event)
 
     def intro(self):
-        self.output = self.DATA["intro"]["intro"]
-        self.output = self.DATA["intro"]["conclusion"]
+        self.output = self.DATA["_intro"]["_intro"]
+        self.output = self.DATA["_intro"]["_conclusion"]
 
     def on_turn(self):
         self.output = self.calendar.pretty_date
@@ -116,18 +176,18 @@ class TNaLaGmesEngine(TNaLaGmesConstruct):
         self.calendar.advance_date()
 
     def on_win(self):
-        self.output = self.DATA["win"]["intro"]
+        self.output = self.DATA["win"]["_intro"]
         # self.output = "AFTER " + str(self.objective.total_distance) + " LONG MILES---HOORAY!!!!!")
         self.calendar.rollback_date(int(self.tracker.last_turn_fraction * self.calendar.days_per_turn))
         self.output = self.calendar.pretty_date
         self.inventory.print_inventory()
-        self.output = self.DATA["win"]["conclusion"]
+        self.output = self.DATA["win"]["_conclusion"]
         self.playing = False
 
     def on_lose(self):
-        self.output = self.DATA["lose"]["intro"]
+        self.output = self.DATA["lose"]["_intro"]
         # TODO
-        self.output = self.DATA["lose"]["conclusion"]
+        self.output = self.DATA["lose"]["_conclusion"]
         self.playing = False
 
     def on_damage(self):
@@ -154,7 +214,7 @@ class TNaLaGmesEngine(TNaLaGmesConstruct):
             self.on_win()
         else:
             self.output = self.DATA["game_over"]["error"]
-            self.output = self.DATA["game_over"]["conclusion"] + str(
+            self.output = self.DATA["game_over"]["_conclusion"] + str(
                 self.tracker.total_distance - self.tracker.mileage)
             self.on_lose()
 
@@ -182,6 +242,7 @@ class TNaLaGmesEngine(TNaLaGmesConstruct):
         while self.playing:
             if self.waiting_for_user:
                 command = input(self.output)
+                print("user said", command)
                 self.parse_command(command)
 
     def submit_command(self, text=""):
@@ -190,8 +251,7 @@ class TNaLaGmesEngine(TNaLaGmesConstruct):
 
     def _run(self):
         self.playing = True
-        if self.ask_yes_no("Do you need instructions?"):
-            self.intro()
+        self.on_start()
         self.register_events()
 
         while not self.calendar.is_final_turn and not self.tracker.completed:
@@ -234,7 +294,8 @@ class TNaLaGmesEngine(TNaLaGmesConstruct):
     def parse_command(self, utterance):
         # parse intent
         answer = TNaLaGmesConstruct.parse_command(self, utterance)
-        if answer != "?":
+
+        if answer.strip().replace(".","") != "?":
             return answer
         else:
             # fallback
@@ -269,3 +330,7 @@ class TNaLaGmesEngine(TNaLaGmesConstruct):
                                        cls.TERMINOLOGY)
             cls.RANDOM_EVENTS = data.get("data",
                                          cls.RANDOM_EVENTS)
+
+    def on_start(self):
+        if self.ask_yes_no("Do you need instructions?"):
+            self.intro()
