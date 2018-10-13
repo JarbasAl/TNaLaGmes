@@ -19,67 +19,65 @@ event_template = {
 }
 
 RANDOM_EVENTS = {
-    'injury': {
-        'attack': {'conclusion': 'enemies defeated',
-                   'damage': 'received damage',
-                   'die': '',
-                   'error': 'out of ammunition',
-                   'events': [],
-                   'intro': 'enemies attack'},
-        'illness': {'conclusion': '',
-                    'damage': '',
-                    'die': '',
-                    'error': '',
-                    'events': [],
-                    'intro': ''},
-        'poison': {'conclusion': '',
-                   'die': 'you die since you have no medicine',
-                   'error': '',
-                   'events': [],
-                   'intro': 'ate poisonous food'},
-        'animal': {'conclusion': 'scared them away',
-                   'damage': 'got bitten',
-                   'die': '',
-                   'error': 'lost armour',
-                   'events': [],
-                   'intro': 'wild animals attack!'},
-        'companion': {'conclusion': '',
-                      'damage': '',
-                      'die': '',
-                      'error': '',
-                      'events': [],
-                      'intro': 'companion got injured'}
-    },
-    'travel': {
-        'bad_terrain': {'conclusion': 'lose food and clothes',
-                        'intro': 'bad terrain causes damage'},
-        'companion_lose': {'conclusion': 'spend half the day looking for '
-                                         'him',
-                           'intro': 'your companion got lost'},
-        'find_supplies': {'conclusion': '', 'intro': 'found supplies'},
-        'fuel_damage': {'conclusion': 'spend time looking for it',
-                        'intro': 'vehicle stolen'},
-        'shelter_damage': {'conclusion': 'lose time and supplies fixing '
-                                         'it',
-                           'intro': 'shelter damage'},
-        'shelter_fire': {'conclusion': 'supplies damaged',
-                         'intro': 'shelter fire'},
-        'supply_damage': {'conclusion': 'lose time looking for more',
-                          'intro': 'supplies perished'},
-        'vehicle_damage': {'conclusion': 'slows you down rest of trip',
-                           'intro': 'vehicle_damage'}
-    },
-    'weather': {
-        'rain': {'conclusion': 'time and supplies lost',
-                 'intro': 'rain'
-                 },
-        'storm': {'conclusion': 'supplies damaged', 'intro': 'storm'},
-        'fog': {'conclusion': 'time is lost',
-                'intro': 'lose your way in heavy fog'},
-        'cold': {'conclusion': 'you have enough clothing',
-                 'error': 'frostbite',
-                 'intro': 'cold'}
-    }
+
+    'attack': {'conclusion': 'enemies defeated',
+               'damage': 'received damage',
+               'die': '',
+               'error': 'out of ammunition',
+               'events': [],
+               'intro': 'enemies attack'},
+    'illness': {'conclusion': '',
+                'damage': '',
+                'die': '',
+                'error': '',
+                'events': [],
+                'intro': ''},
+    'poison': {'conclusion': '',
+               'die': 'you die since you have no medicine',
+               'error': '',
+               'events': [],
+               'intro': 'ate poisonous food'},
+    'animal': {'conclusion': 'scared them away',
+               'damage': 'got bitten',
+               'die': '',
+               'error': 'lost armour',
+               'events': [],
+               'intro': 'wild animals attack!'},
+    'companion': {'conclusion': '',
+                  'damage': '',
+                  'die': '',
+                  'error': '',
+                  'events': [],
+                  'intro': 'companion got injured'},
+
+    'bad_terrain': {'conclusion': 'lose food and clothes',
+                    'intro': 'bad terrain causes damage'},
+    'companion_lose': {'conclusion': 'spend half the day looking for '
+                                     'him',
+                       'intro': 'your companion got lost'},
+    'find_supplies': {'conclusion': '', 'intro': 'found supplies'},
+    'fuel_damage': {'conclusion': 'spend time looking for it',
+                    'intro': 'vehicle stolen'},
+    'shelter_damage': {'conclusion': 'lose time and supplies fixing '
+                                     'it',
+                       'intro': 'shelter damage'},
+    'shelter_fire': {'conclusion': 'supplies damaged',
+                     'intro': 'shelter fire'},
+    'supply_damage': {'conclusion': 'lose time looking for more',
+                      'intro': 'supplies perished'},
+    'vehicle_damage': {'conclusion': 'slows you down rest of trip',
+                       'intro': 'vehicle_damage'}
+    ,
+
+    'rain': {'conclusion': 'time and supplies lost',
+             'intro': 'rain'
+             },
+    'storm': {'conclusion': 'supplies damaged', 'intro': 'storm'},
+    'fog': {'conclusion': 'time is lost',
+            'intro': 'lose your way in heavy fog'},
+    'cold': {'conclusion': 'you have enough clothing',
+             'error': 'frostbite',
+             'intro': 'cold'}
 }
 
 GAME_EVENTS = {

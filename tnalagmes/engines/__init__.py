@@ -67,7 +67,10 @@ class Event(TNaLaGmesConstruct):
 
     def trigger(self, data=None):
         if self.event_handler is not None:
-            return self.event_handler(data)
+            try:
+                return self.event_handler(data)
+            except TypeError:
+                return self.event_handler()
 
         self.output = self.intro
         self.output = self.conclusion
@@ -97,7 +100,7 @@ class TNaLaGmesEngine(TNaLaGmesConstruct):
 
     def on_random_event(self):
         event = random.choice(self.random_events)
-        self.output = event.trigger()
+        self.output = event.trigger({})
 
     @classmethod
     def get_entity(cls, text):
@@ -158,8 +161,8 @@ class TNaLaGmesEngine(TNaLaGmesConstruct):
                 self.register_event(event)
 
     def intro(self):
-        self.output = self.DATA["_intro"]["_intro"]
-        self.output = self.DATA["_intro"]["_conclusion"]
+        self.output = self.DATA["intro"]["intro"]
+        self.output = self.DATA["intro"]["conclusion"]
 
     def on_turn(self):
         self.output = self.calendar.pretty_date
@@ -176,18 +179,12 @@ class TNaLaGmesEngine(TNaLaGmesConstruct):
         self.calendar.advance_date()
 
     def on_win(self):
-        self.output = self.DATA["win"]["_intro"]
-        # self.output = "AFTER " + str(self.objective.total_distance) + " LONG MILES---HOORAY!!!!!")
         self.calendar.rollback_date(int(self.tracker.last_turn_fraction * self.calendar.days_per_turn))
         self.output = self.calendar.pretty_date
         self.inventory.print_inventory()
-        self.output = self.DATA["win"]["_conclusion"]
         self.playing = False
 
     def on_lose(self):
-        self.output = self.DATA["lose"]["_intro"]
-        # TODO
-        self.output = self.DATA["lose"]["_conclusion"]
         self.playing = False
 
     def on_damage(self):
@@ -213,9 +210,6 @@ class TNaLaGmesEngine(TNaLaGmesConstruct):
         if self.tracker.completed:
             self.on_win()
         else:
-            self.output = self.DATA["game_over"]["error"]
-            self.output = self.DATA["game_over"]["_conclusion"] + str(
-                self.tracker.total_distance - self.tracker.mileage)
             self.on_lose()
 
     def on_difficulty_modifier(self):
@@ -242,7 +236,6 @@ class TNaLaGmesEngine(TNaLaGmesConstruct):
         while self.playing:
             if self.waiting_for_user:
                 command = input(self.output)
-                print("user said", command)
                 self.parse_command(command)
 
     def submit_command(self, text=""):

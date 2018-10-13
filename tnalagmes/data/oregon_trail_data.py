@@ -6,132 +6,144 @@ TERMINOLOGY = {
     'fuel': ['your oxen team'],
     'medicine': ['miscellaneous supplies'],
     'passive_damage': ['pneumonia'],
-    'supplies': ['food']
+    'supplies': ['food'],
+    "currency": ["cash"]
 }
 
 RANDOM_EVENTS = {
-    'injury': {
-        'attack': {'conclusion': 'quickest draw outside of dodge city!!!\n'
-                                 "you got 'em!",
-                   'damage': 'you got shot in the leg and they took one '
-                             'of your oxen\n'
-                             'better have a doc look at your wound',
-                   'die': '',
-                   'error': 'you ran out of bullets---they get lots of '
-                            'cash',
-                   'events': [],
-                   'intro': 'bandits attack'},
-        'illness': {'conclusion': '',
+    'attack': {'conclusion': 'quickest draw outside of dodge city!!!\n'
+                             "you got 'em!",
+               'damage': 'you got shot in the leg and they took one '
+                         'of your oxen\n'
+                         'better have a doc look at your wound',
+               'die': '',
+               'error': 'you ran out of bullets---they get lots of '
+                        'cash',
+               'events': [],
+               'intro': 'bandits attack'
+               },
+    'illness': {'conclusion': '',
+                'damage': '',
+                'die': '',
+                'error': '',
+                'events': [],
+                'intro': ''
+                },
+    'poison': {'conclusion': '',
+               'die': 'you die of snakebite since you have no '
+                      'medicine',
+               'error': '',
+               'events': [],
+               'intro': 'you killed a poisonous snake after it bit '
+                        'you'
+               },
+    'animal': {'conclusion': "nice shootin' pardner---they didn't get "
+                             'much',
+               'damage': 'you were too low on bullets--\n'
+                         'the wolves overpowered you',
+               'die': '',
+               'error': 'slow on the draw---they got at your food and '
+                        'clothes',
+               'events': [],
+               'intro': 'wild animals attack!'
+               },
+    'companion': {'conclusion': '',
+                  'damage': '',
+                  'die': '',
+                  'error': '',
+                  'events': [],
+                  'intro': 'bad luck---your daughter broke her arm\n'
+                           'you had to stop and use supplies to make '
+                           'a sling'
+                  },
+    'bad_terrain': {'conclusion': '',
                     'damage': '',
                     'die': '',
                     'error': '',
                     'events': [],
-                    'intro': ''},
-        'poison': {'conclusion': '',
-                   'die': 'you die of snakebite since you have no '
-                          'medicine',
-                   'error': '',
-                   'events': [],
-                   'intro': 'you killed a poisonous snake after it bit '
-                            'you'},
-        'animal': {'conclusion': "nice shootin' pardner---they didn't get "
-                                 'much',
-                   'damage': 'you were too low on bullets--\n'
-                             'the wolves overpowered you',
-                   'die': '',
-                   'error': 'slow on the draw---they got at your food and '
-                            'clothes',
-                   'events': [],
-                   'intro': 'wild animals attack!'},
-        'companion': {'conclusion': '',
+                    'intro': 'wagon gets swamped fording river--lose '
+                             'food and clothes'},
+    'companion_lose': {'conclusion': '',
+                       'damage': '',
+                       'die': '',
+                       'error': '',
+                       'events': [],
+                       'intro': 'your son gets lost---spend half the '
+                                'day looking for him'},
+    'find_supplies': {'conclusion': '',
                       'damage': '',
                       'die': '',
                       'error': '',
                       'events': [],
-                      'intro': 'bad luck---your daughter broke her arm\n'
-                               'you had to stop and use supplies to make '
-                               'a sling'}
-    },
-    'travel': {'bad_terrain': {'conclusion': '',
-                               'damage': '',
-                               'die': '',
-                               'error': '',
-                               'events': [],
-                               'intro': 'wagon gets swamped fording river--lose '
-                                        'food and clothes'},
-               'companion_lose': {'conclusion': '',
-                                  'damage': '',
-                                  'die': '',
-                                  'error': '',
-                                  'events': [],
-                                  'intro': 'your son gets lost---spend half the '
-                                           'day looking for him'},
-               'find_supplies': {'conclusion': '',
-                                 'damage': '',
-                                 'die': '',
-                                 'error': '',
-                                 'events': [],
-                                 'intro': 'helpful indians show you where to '
-                                          'find more food'},
-               'fuel_damage': {'conclusion': '',
-                               'damage': '',
-                               'die': '',
-                               'error': '',
-                               'events': [],
-                               'intro': 'ox wanders off---spend time looking for '
-                                        'it'},
-               'shelter_damage': {'conclusion': '',
-                                  'damage': '',
-                                  'die': '',
-                                  'error': '',
-                                  'events': [],
-                                  'intro': 'wagon breaks down--lose time and '
-                                           'supplies fixing it'},
-               'shelter_fire': {'conclusion': '',
-                                'damage': '',
-                                'die': '',
-                                'error': '',
-                                'events': [],
-                                'intro': 'there was a fire in your wagon--food '
-                                         'and supplies damaged'},
-               'supply_damage': {'conclusion': '',
-                                 'damage': '',
-                                 'die': '',
-                                 'error': '',
-                                 'events': [],
-                                 'intro': 'unsafe water--lose time looking for '
-                                          'clean spring'},
-               'vehicle_damage': {'conclusion': '',
-                                  'damage': '',
-                                  'die': '',
-                                  'error': '',
-                                  'events': [],
-                                  'intro': 'ox injures leg---slows you down rest '
-                                           'of trip'}},
-    'weather': {'heavy_rain': {'conclusion': '',
-                               'die': '',
-                               'error': '',
-                               'events': [],
-                               'intro': 'heavy rains---time and supplies lost'},
-                'storm': {'conclusion': '',
-                          'die': '',
-                          'error': '',
-                          'events': [],
-                          'intro': 'hail storm---supplies damaged'},
-                'fog': {'conclusion': '',
-                        'die': '',
-                        'error': '',
-                        'events': [],
-                        'intro': 'lose your way in heavy fog---time is '
-                                 'lost'},
-                'cold': {'conclusion': 'you have enough clothing to keep '
-                                       'you warm',
-                         'die': '',
-                         'error': "you don't have enough clothing to "
-                                  'keep you warm',
-                         'events': [],
-                         'intro': 'cold weather---brrrrrrr!---'}
-                }
+                      'intro': 'helpful indians show you where to '
+                               'find more food'},
+    'fuel_damage': {'conclusion': '',
+                    'damage': '',
+                    'die': '',
+                    'error': '',
+                    'events': [],
+                    'intro': 'ox wanders off---spend time looking for '
+                             'it'
+                    },
+    'shelter_damage': {'conclusion': '',
+                       'damage': '',
+                       'die': '',
+                       'error': '',
+                       'events': [],
+                       'intro': 'wagon breaks down--lose time and '
+                                'supplies fixing it'
+                       },
+    'shelter_fire': {'conclusion': '',
+                     'damage': '',
+                     'die': '',
+                     'error': '',
+                     'events': [],
+                     'intro': 'there was a fire in your wagon--food '
+                              'and supplies damaged'
+                     },
+    'supply_damage': {'conclusion': '',
+                      'damage': '',
+                      'die': '',
+                      'error': '',
+                      'events': [],
+                      'intro': 'unsafe water--lose time looking for '
+                               'clean spring'
+                      },
+    'vehicle_damage': {'conclusion': '',
+                       'damage': '',
+                       'die': '',
+                       'error': '',
+                       'events': [],
+                       'intro': 'ox injures leg---slows you down rest '
+                                'of trip'
+                       },
+    'heavy_rain': {'conclusion': '',
+                   'die': '',
+                   'error': '',
+                   'events': [],
+                   'intro': 'heavy rains---time and supplies lost'
+                   },
+    'storm': {'conclusion': '',
+              'die': '',
+              'error': '',
+              'events': [],
+              'intro': 'hail storm---supplies damaged'
+              },
+    'fog': {'conclusion': '',
+            'die': '',
+            'error': '',
+            'events': [],
+            'intro': 'lose your way in heavy fog---time is '
+                     'lost'
+            },
+    'cold': {'conclusion': 'you have enough clothing to keep '
+                           'you warm',
+             'die': '',
+             'error': "you don't have enough clothing to "
+                      'keep you warm',
+             'events': [],
+             'intro': 'cold weather---brrrrrrr!---'
+             }
 }
 
 GAME_EVENTS = {
@@ -151,7 +163,8 @@ GAME_EVENTS = {
                                    'find trail!',
                                    'wagon damaged!---lose time and supplies',
                                    'the going gets slow'],
-                        'intro': 'rugged mountains'},
+                        'intro': 'rugged mountains'
+                        },
     'enemy_encounter': {'conclusion': '',
                         'damage': 'lousy shot---you got knifed\n'
                                   "you have to see ol' doc blanchard",
@@ -170,23 +183,27 @@ GAME_EVENTS = {
                                              "if you circle you'll lose time"],
                         'peaceful_conclusion': ' were friendly, but check for '
                                                'possible losses',
-                        'peaceful_intro': "they don't look hostile"},
+                        'peaceful_intro': "they don't look hostile"
+                        },
     'explore': {'conclusion': '',
                 'error': 'tough---you need more bullets to go hunting',
                 'events': ["ri\x07ght betwee\x07n the eye\x07's---you got a\x07 "
                            'big one!!\x07!!',
                            'sorry---no luck today',
                            'nice shot--right through the neck--feast tonight!!'],
-                'intro': ''},
+                'intro': ''
+                },
     'game_over': {'conclusion': 'distance remaining: ',
                   'error': 'time has run out.  winter has set in and you did not '
-                           'reach oregon.'},
+                           'reach oregon.'
+                  },
     'hard_difficulty': {'conclusion': '', 'intro': ''},
     'heal': {'conclusion': "doctor's bill is $20",
              'die': 'you died of',
              'error': "you can't afford a doctor",
              'events': [],
-             'intro': ''},
+             'intro': ''
+             },
     'intro': {'conclusion': 'you can spend all your money before you start your '
                             'trip -\n'
                             'or you can save some of your cash to spend at forts '
@@ -230,11 +247,13 @@ GAME_EVENTS = {
                        '               the mountains\n'
                        '     miscellaneous supplies - this includes medicine and\n'
                        '               other things you will need for sickness\n'
-                       '               and emergency repairs'},
+                       '               and emergency repairs'
+              },
     'inventory': {'conclusion': 'after all your purchases, you now have '
                                 '{inv.money} dollars left',
                   'error': 'you overspent--you only had $700 to spend.  buy again',
-                  'intro': 'how much do you want to spend on '},
+                  'intro': 'how much do you want to spend on '
+                  },
     'lose': {'conclusion': 'we thank you for this information and we are sorry '
                            'you\n'
                            "didn't make it to the great territory of oregon\n"
@@ -248,174 +267,35 @@ GAME_EVENTS = {
              'yes_no_questions': ['would you like a minister?',
                                   'would you like a fancy funeral?',
                                   'would you like us to inform your next of '
-                                  'kin?']},
-    'low supplies': {'intro': "you'd better do some hunting or buy food and "
-                              'soon!!!!'},
+                                  'kin?']
+             },
+    'low_supplies': {'intro': "you'd better do some hunting or buy food and "
+                              'soon!!!!'
+                     },
     'maintenance': {'conclusion': '',
                     'error': "you can't eat that well",
                     'intro': 'do you want to eat (1) poorly  (2) moderately\n'
-                             'or (3) well'},
+                             'or (3) well'
+                    },
     'medium_difficulty': {'conclusion': 'you made it safely through south '
                                         'pass--no snow',
-                          'intro': ''},
+                          'intro': ''
+                          },
     'numeric': {'error': 'impossible', 'high': 'too high', 'low': 'too low'},
-    'random_events': {'injury': [{'attack': {'conclusion': 'quickest draw outside '
-                                                           'of dodge city!!!\n'
-                                                           "you got 'em!",
-                                             'damage': 'you got shot in the leg '
-                                                       'and they took one of your '
-                                                       'oxen\n'
-                                                       'better have a doc look at '
-                                                       'your wound',
-                                             'die': '',
-                                             'error': 'you ran out of '
-                                                      'bullets---they get lots of '
-                                                      'cash',
-                                             'events': [],
-                                             'intro': 'bandits attack'}},
-                                 {'illness': {'conclusion': '',
-                                              'damage': '',
-                                              'die': '',
-                                              'error': '',
-                                              'events': [],
-                                              'intro': ''}},
-                                 {'poison': {'conclusion': '',
-                                             'die': 'you die of snakebite since '
-                                                    'you have no medicine',
-                                             'error': '',
-                                             'events': [],
-                                             'intro': 'you killed a poisonous '
-                                                      'snake after it bit you'}},
-                                 {'animal': {'conclusion': "nice shootin' "
-                                                           "pardner---they didn't "
-                                                           'get much',
-                                             'damage': 'you were too low on '
-                                                       'bullets--\n'
-                                                       'the wolves overpowered '
-                                                       'you',
-                                             'die': '',
-                                             'error': 'slow on the draw---they '
-                                                      'got at your food and '
-                                                      'clothes',
-                                             'events': [],
-                                             'intro': 'wild animals attack!'}},
-                                 {'companion': {'conclusion': '',
-                                                'damage': '',
-                                                'die': '',
-                                                'error': '',
-                                                'events': [],
-                                                'intro': 'bad luck---your '
-                                                         'daughter broke her arm\n'
-                                                         'you had to stop and use '
-                                                         'supplies to make a '
-                                                         'sling'}}],
-                      'travel': [{'bad_terrain': {'conclusion': '',
-                                                  'damage': '',
-                                                  'die': '',
-                                                  'error': '',
-                                                  'events': [],
-                                                  'intro': 'wagon gets swamped '
-                                                           'fording river--lose '
-                                                           'food and clothes'},
-                                  'companion_lose': {'conclusion': '',
-                                                     'damage': '',
-                                                     'die': '',
-                                                     'error': '',
-                                                     'events': [],
-                                                     'intro': 'your son gets '
-                                                              'lost---spend half '
-                                                              'the day looking '
-                                                              'for him'},
-                                  'find_supplies': {'conclusion': '',
-                                                    'damage': '',
-                                                    'die': '',
-                                                    'error': '',
-                                                    'events': [],
-                                                    'intro': 'helpful indians '
-                                                             'show you where to '
-                                                             'find more food'},
-                                  'fuel_damage': {'conclusion': '',
-                                                  'damage': '',
-                                                  'die': '',
-                                                  'error': '',
-                                                  'events': [],
-                                                  'intro': 'ox wanders '
-                                                           'off---spend time '
-                                                           'looking for it'},
-                                  'shelter_damage': {'conclusion': '',
-                                                     'damage': '',
-                                                     'die': '',
-                                                     'error': '',
-                                                     'events': [],
-                                                     'intro': 'wagon breaks '
-                                                              'down--lose time '
-                                                              'and supplies '
-                                                              'fixing it'},
-                                  'shelter_fire': {'conclusion': '',
-                                                   'damage': '',
-                                                   'die': '',
-                                                   'error': '',
-                                                   'events': [],
-                                                   'intro': 'there was a fire in '
-                                                            'your wagon--food and '
-                                                            'supplies damaged'},
-                                  'supply_damage': {'conclusion': '',
-                                                    'damage': '',
-                                                    'die': '',
-                                                    'error': '',
-                                                    'events': [],
-                                                    'intro': 'unsafe water--lose '
-                                                             'time looking for '
-                                                             'clean spring'},
-                                  'vehicle_damage': {'conclusion': '',
-                                                     'damage': '',
-                                                     'die': '',
-                                                     'error': '',
-                                                     'events': [],
-                                                     'intro': 'ox injures '
-                                                              'leg---slows you '
-                                                              'down rest of '
-                                                              'trip'}}],
-                      'weather': [{'heavy_rain': {'conclusion': '',
-                                                  'die': '',
-                                                  'error': '',
-                                                  'events': [],
-                                                  'intro': 'heavy rains---time '
-                                                           'and supplies lost'}},
-                                  {'hail_storm': {'conclusion': '',
-                                                  'die': '',
-                                                  'error': '',
-                                                  'events': [],
-                                                  'intro': 'hail storm---supplies '
-                                                           'damaged'}},
-                                  {'heavy_fog': {'conclusion': '',
-                                                 'die': '',
-                                                 'error': '',
-                                                 'events': [],
-                                                 'intro': 'lose your way in heavy '
-                                                          'fog---time is lost'}},
-                                  {'cold_weather': {'conclusion': 'you have '
-                                                                  'enough '
-                                                                  'clothing to '
-                                                                  'keep you warm',
-                                                    'die': '',
-                                                    'error': "you don't have "
-                                                             'enough clothing to '
-                                                             'keep you warm',
-                                                    'events': [],
-                                                    'intro': 'cold '
-                                                             'weather---brrrrrrr!---'}}]},
     'shop': {'conclusion': '',
              'error': "you don't have that much--keep your spending down",
              'events': [],
-             'intro': 'enter what you wish to spend on the following'},
+             'intro': 'enter what you wish to spend on the following'
+             },
     'turn': {'die': 'you ran out of food and starved to death',
              'intro': 'do you want to (1) stop at the next fort, (2) hunt, \n'
-                      'or (3) continue'},
+                      'or (3) continue'
+             },
     'win': {'conclusion': 'president james k. polk sends you his\n'
                           '      heartiest congratulations\n'
                           '           and wishes you a prosperous life ahead\n'
                           '                      at your new home',
             'intro': 'you finally arrived at oregon city\n'
-                     ' after {objective.total_distance} long miles---hooray!!!!!'}
+                     ' after {objective.total_distance} long miles---hooray!!!!!'
+            }
 }

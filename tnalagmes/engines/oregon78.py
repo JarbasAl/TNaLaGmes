@@ -12,7 +12,7 @@ class Oregon78Engine(Oregon75Engine):
     name = "Oregon78Engine"
 
     def __init__(self, name=None, from_json=False):
-        Oregon75Engine.__init__(self, "game_engine", from_json)
+        Oregon75Engine.__init__(self, from_json)
 
 
 if __name__ == "__main__":

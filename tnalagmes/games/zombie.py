@@ -1,14 +1,16 @@
-from tnalagmes.engines.oregonengine import OregonEngine
+from tnalagmes.engines.oregon75 import Oregon75Engine, Calendar
 from tnalagmes.data.zombie_survival_data import GAME_EVENTS, RANDOM_EVENTS, TERMINOLOGY
 
 
-class ZVirus(OregonEngine):
+class ZVirus(Oregon75Engine):
     DATA = GAME_EVENTS
     RANDOM_EVENTS = RANDOM_EVENTS
     TERMINOLOGY = TERMINOLOGY
+    name = "ZVirus"
 
     def __init__(self):
-        OregonEngine.__init__(self, "ZVirus", from_json=True)
+        Oregon75Engine.__init__(self, from_json=True)
+        self.calendar = Calendar(turn_delta=1, total_turns=25)
 
 
 if __name__ == "__main__":
