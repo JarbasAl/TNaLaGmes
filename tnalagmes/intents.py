@@ -40,13 +40,17 @@ from tnalagmes.util.nlp import textual_entailment
 from os.path import join, dirname
 
 
-class TNaLaGmesFuzzyIntentParser(object):
+class TNaLaGmesBaseIntentParser(object):
     def __init__(self):
         self.engine = None
         self.intents = {}
         self.samples = {}
 
     def learn(self):
+        """
+        For parsers that need a training phase
+        :return:
+        """
         # train registered intents
         pass
 
@@ -95,17 +99,36 @@ class TNaLaGmesFuzzyIntentParser(object):
     @staticmethod
     def _normalize_keyword_input(name, required=None, optionals=None,
                                  ignore_defaults=False):
+        """
+        keywords may be a list, each will be loaded into a dict as {kw: [kw]}
+        keywords may be None, name will be used as single keyword {name: [name]}
+        keywords may be a dict, each key is a keyword + list of synonyms
+
+        keyword samples will be expanded from .voc files if ignore_defaults=False
+
+        :param name: str
+        :param required: dict/list/None
+        :param optionals: dict/list/None
+        :param ignore_defaults: bool
+        :return: required(dict), optionals(dict)
+        """
         optionals = optionals or []
         required = required or [name]
 
         if required and isinstance(required, list):
-            required = {required[0]: required}
+            bucket = {}
+            for r in required:
+                bucket[r] = [r]
+            required = bucket
         if optionals and isinstance(optionals, list):
-            optionals = {optionals[0]: optionals}
+            bucket = {}
+            for r in optionals:
+                bucket[r] = [r]
+            optionals= bucket
 
         if not ignore_defaults:
             for req in required:
-                data = TNaLaGmesFuzzyIntentParser.load_resource(req)
+                data = TNaLaGmesBaseIntentParser.load_resource(req)
                 if data:
                     # merge file data
                     for new in data:
@@ -113,7 +136,7 @@ class TNaLaGmesFuzzyIntentParser(object):
                             required[req].append(new)
 
             for optional in optionals:
-                data = TNaLaGmesFuzzyIntentParser.load_resource(optional)
+                data = TNaLaGmesBaseIntentParser.load_resource(optional)
                 if data:
                     # merge file data
                     for new in data:
@@ -125,11 +148,21 @@ class TNaLaGmesFuzzyIntentParser(object):
     @staticmethod
     def _normalize_samples_input(name, samples=None,
                                  ignore_defaults=False):
+        """
+        samples may be None and name will be used as single sample
+        samples may be a list of sample phrases to trigger this intent
+        if ignore_defaults is False, samples will be expanded from disk vocabulary
+
+        :param name:
+        :param samples:
+        :param ignore_defaults:
+        :return:
+        """
         samples = samples or [name]
 
         if not ignore_defaults:
             for req in samples:
-                data = TNaLaGmesFuzzyIntentParser.load_resource(req)
+                data = TNaLaGmesBaseIntentParser.load_resource(req)
                 if data:
                     # merge file data
                     for new in data:
@@ -140,6 +173,21 @@ class TNaLaGmesFuzzyIntentParser(object):
 
     def register_keyword_intent(self, name, required=None, optionals=None,
                                 handler=None, ignore_defaults=False):
+        """
+        rule based intent,
+
+        required and optionals keywords
+            may be dict , list or None, will be formatted into
+
+            { word : [sample1, sample2] }
+
+        :param name:
+        :param required:
+        :param optionals:
+        :param handler:
+        :param ignore_defaults:
+        :return:
+        """
         required, optionals = self._normalize_keyword_input(name, required,
                                                             optionals,
                                                             ignore_defaults)
@@ -153,7 +201,7 @@ class TNaLaGmesFuzzyIntentParser(object):
         self.register_intent(name, samples)
 
 
-class TNaLaGmesEntailmentIntentParser(TNaLaGmesFuzzyIntentParser):
+class TNaLaGmesEntailmentIntentParser(TNaLaGmesBaseIntentParser):
     def match(self, utterance, sample):
         return textual_entailment(utterance, sample).get("entailment", 0)
 
@@ -177,9 +225,9 @@ class TNaLaGmesEntailmentIntentParser(TNaLaGmesFuzzyIntentParser):
         return intent
 
 
-class TNaLaGmesAdaptIntentParser(TNaLaGmesFuzzyIntentParser):
+class TNaLaGmesAdaptIntentParser(TNaLaGmesBaseIntentParser):
     def __init__(self):
-        TNaLaGmesFuzzyIntentParser.__init__(self)
+        TNaLaGmesBaseIntentParser.__init__(self)
         self.engine = IntentDeterminationEngine()
         self.context_manager = ContextManager()
 
@@ -233,9 +281,9 @@ class TNaLaGmesAdaptIntentParser(TNaLaGmesFuzzyIntentParser):
         self.intents[intent_name] = handler
 
 
-class TNaLaGmesPadatiousIntentParser(TNaLaGmesFuzzyIntentParser):
+class TNaLaGmesPadatiousIntentParser(TNaLaGmesBaseIntentParser):
     def __init__(self):
-        TNaLaGmesFuzzyIntentParser.__init__(self)
+        TNaLaGmesBaseIntentParser.__init__(self)
         self.engine = IntentContainer(TNaLaGmesConstruct.cache_dir)
 
     def calc_intent(self, utterance, lang="en-us"):
@@ -262,7 +310,7 @@ class TNaLaGmesIntentContainer(object):
         self.engine_list = [
             TNaLaGmesAdaptIntentParser(),
             TNaLaGmesPadatiousIntentParser(),
-            TNaLaGmesFuzzyIntentParser()
+            TNaLaGmesBaseIntentParser()
         ]
 
     def register_intent(self, name,
@@ -270,7 +318,7 @@ class TNaLaGmesIntentContainer(object):
                         handler=None,
                         ignore_defaults=False):
         samples = \
-            TNaLaGmesFuzzyIntentParser._normalize_samples_input(
+            TNaLaGmesBaseIntentParser._normalize_samples_input(
                 name, samples, ignore_defaults)
         for engine in self.engine_list:
             engine.register_intent(name, samples, handler, True)
@@ -281,7 +329,7 @@ class TNaLaGmesIntentContainer(object):
                                 handler=None,
                                 ignore_defaults=False):
         required, optionals = \
-            TNaLaGmesFuzzyIntentParser._normalize_keyword_input(
+            TNaLaGmesBaseIntentParser._normalize_keyword_input(
                 name, required, optionals, ignore_defaults)
         for engine in self.engine_list:
             engine.register_keyword_intent(name, required, optionals,
@@ -308,7 +356,7 @@ class TNaLaGmesIntentContainer(object):
         for best_intent in self.disambiguate(commands, lang):
             if not best_intent:
                 continue
-            best_intent['normalized_utterance'] = utterance
+            best_intent['utterance'] = utterance
             if number:
                 best_intent["extracted_number"] = number
             # TODO build TNaLaGmesIntent object

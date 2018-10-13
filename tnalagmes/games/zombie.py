@@ -9,7 +9,7 @@ class ZVirus(Oregon75Engine):
     name = "ZVirus"
 
     def __init__(self):
-        Oregon75Engine.__init__(self, from_json=True)
+        Oregon75Engine.__init__(self)
         self.calendar = Calendar(turn_delta=1, total_turns=25)
 
 

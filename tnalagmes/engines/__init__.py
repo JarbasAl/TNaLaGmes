@@ -113,6 +113,8 @@ class TNaLaGmesEngine(TNaLaGmesConstruct):
         pprint(data)
 
     def register_default_intents(self):
+        # TODO translate options strings to 1, 2, 3, 4
+
         # engine interface
         self.register_intent("save", ["save {file}", "save"], self.handle_save)
         self.register_intent("load", ["load {file}", "load"], self.handle_load)
@@ -285,12 +287,21 @@ class TNaLaGmesEngine(TNaLaGmesConstruct):
         return "game data exported"
 
     def ask_world(self, utterance):
+        # query self intents first
+        intents = self.calc_intents(utterance)
+        answer = ""
+        for intent in intents:
+            answer += self.intent_parser.execute_intent(intent)
+        if answer and answer != "?":
+            return answer
         # query all game objects
         for obj in self.talking_objects:
             # parse intent
             answer = obj.parse_command(utterance)
             if answer.strip().replace(".", "") != "?":
                 return answer
+
+        # submit to internal game engine for handling
         return "?"
 
     @property
@@ -300,13 +311,12 @@ class TNaLaGmesEngine(TNaLaGmesConstruct):
     def parse_command(self, utterance):
         # parse intent
         answer = self.ask_world(utterance)
-
         if answer.strip().replace(".", "") != "?":
-            return answer
+            self.output = answer
         else:
             # fallback
-            self.submit_command(utterance)
-        return self.output
+            self.output = self.submit_command(utterance)
+        #return self.output
 
     @classmethod
     def export_game_data(cls, path=None):

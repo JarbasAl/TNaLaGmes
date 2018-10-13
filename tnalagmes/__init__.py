@@ -274,12 +274,14 @@ class TNaLaGmesConstruct(object):
                 return self.ask_numeric(prompt, lower_bound, upper_bound)
         return value
 
-    def ask_with_timeout(self, prompt="say BANG", timeout=7):
+    def ask_with_timeout(self, prompt="say BANG", answer="bang", timeout=7):
         self.output = prompt
         self.waiting_for_user = True
         while self.waiting_for_user:
             sleep(0.1)
         response = self.input.lower().strip()
+        if response != answer:
+            return self.ask_with_timeout(prompt, answer, timeout) + 1
         # TODO measure mic level or type speed
         return response, random.randint(1, 7)
 

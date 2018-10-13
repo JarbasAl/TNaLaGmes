@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='TNaLaGmes',
-    version='0.1',
+    version='0.1.1',
     packages=['tnalagmes', 'tnalagmes.data', 'tnalagmes.games', 'tnalagmes.engines',
               'tnalagmes.models', 'tnalagmes.lang', 'tnalagmes.locale', 'tnalagmes.util'],
     url='https://github.com/JarbasAl/TNaLaGmes',
