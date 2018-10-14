@@ -471,6 +471,11 @@ class TNaLaGmesIntentContainer(object):
 
     """
     def register_parsetron(self, name, required=None, optionals=None):
+        # extracts multiple intents/matches in a single utterance
+        # sentences are then reconstructed from parsetron matches
+        # reconstructed sentences sent to intent parsers
+        # used in disambiguation when validating intents
+        
         required, optionals = self.normalize_keyword_input(name, required=required, optionals=optionals)
         one_parse = None
 
@@ -479,6 +484,7 @@ class TNaLaGmesIntentContainer(object):
             one_parse = one_parse + word if one_parse else word
 
         for optional in optionals:
+            # these ones will only be detected at end of sentence
             word = Set(optionals[optional])
             one_parse = one_parse + Optional(word) if one_parse else word
 
