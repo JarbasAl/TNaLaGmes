@@ -116,7 +116,7 @@ class Agent(TNaLaGmesConstruct):
     def __init__(self, health=9000, name="you", mana=0, attack=1,
                  magic=None, inventory=None, direction=None,
                  interacting_with=None, scene=None, coordinates=None):
-        TNaLaGmesConstruct.__init__(self, "player", direction, interacting_with, scene, coordinates)
+        TNaLaGmesConstruct.__init__(self, "agent", direction, interacting_with, scene, coordinates)
         self.max_hp = health
         self.hp = health
         self.max_mp = mana
