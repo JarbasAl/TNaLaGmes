@@ -9,6 +9,8 @@ import time
 import random
 from tnalagmes.util.log import LOG
 from tnalagmes.util import resolve_resource_file
+# from parsetron import *  # waiting py3 support
+
 
 
 class TNaLaGmesIntent(TNaLaGmesConstruct):
@@ -157,7 +159,7 @@ class TNaLaGmesBaseIntentParser(object):
 
     def register_intent(self, name, samples=None, handler=None,
                         ignore_defaults=False, validator=None):
-        samples = self._normalize_samples_input(name, samples, ignore_defaults)
+        samples = samples or []
         name = self.name + ":" + name
         self.samples[name] = samples
         self.samples[name] = [TNaLaGmesConstruct.normalize(s) for s in
@@ -180,81 +182,6 @@ class TNaLaGmesBaseIntentParser(object):
                 return lines.split(sep)
         return None
 
-    @staticmethod
-    def _normalize_keyword_input(name, required=None, optionals=None,
-                                 ignore_defaults=False):
-        """
-        keywords may be a list, each will be loaded into a dict as {kw: [kw]}
-        keywords may be None, name will be used as single keyword {name: [name]}
-        keywords may be a dict, each key is a keyword + list of synonyms
-
-        keyword samples will be expanded from .voc files if ignore_defaults=False
-
-        :param name: str
-        :param required: dict/list/None
-        :param optionals: dict/list/None
-        :param ignore_defaults: bool
-        :return: required(dict), optionals(dict)
-        """
-        optionals = optionals or []
-        required = required or [name]
-
-        if required and isinstance(required, list):
-            bucket = {}
-            for r in required:
-                bucket[r] = [r]
-            required = bucket
-        if optionals and isinstance(optionals, list):
-            bucket = {}
-            for r in optionals:
-                bucket[r] = [r]
-            optionals = bucket
-
-        if not ignore_defaults:
-            for req in required:
-                data = TNaLaGmesBaseIntentParser.load_resource(req)
-                if data:
-                    # merge file data
-                    for new in data:
-                        if new not in required[req]:
-                            required[req].append(new)
-
-            for optional in optionals:
-                data = TNaLaGmesBaseIntentParser.load_resource(optional)
-                if data:
-                    # merge file data
-                    for new in data:
-                        optionals[optional] = optionals[optional] or []
-                        if new not in optionals[optional]:
-                            optionals[optional].append(new)
-        return required, optionals
-
-    @staticmethod
-    def _normalize_samples_input(name, samples=None,
-                                 ignore_defaults=False):
-        """
-        samples may be None and name will be used as single sample
-        samples may be a list of sample phrases to trigger this intent
-        if ignore_defaults is False, samples will be expanded from disk vocabulary
-
-        :param name:
-        :param samples:
-        :param ignore_defaults:
-        :return:
-        """
-        samples = samples or [name]
-
-        if not ignore_defaults:
-            for req in samples:
-                data = TNaLaGmesBaseIntentParser.load_resource(req)
-                if data:
-                    # merge file data
-                    for new in data:
-                        if new not in samples:
-                            samples.append(new)
-
-        return samples
-
     def register_keyword_intent(self, name, required=None, optionals=None,
                                 handler=None, ignore_defaults=False, validator=None):
         """
@@ -272,9 +199,9 @@ class TNaLaGmesBaseIntentParser(object):
         :param ignore_defaults:
         :return:
         """
-        required, optionals = self._normalize_keyword_input(name, required,
-                                                            optionals,
-                                                            ignore_defaults)
+        required, optionals = TNaLaGmesIntentContainer.normalize_keyword_input(name, required,
+                                                                               optionals,
+                                                                               ignore_defaults)
 
         min_sentence = " ".join(required.keys())
 
@@ -351,9 +278,9 @@ class TNaLaGmesAdaptIntentParser(TNaLaGmesBaseIntentParser):
 
     def register_keyword_intent(self, name, required=None, optionals=None,
                                 handler=None, ignore_defaults=False, validator=None):
-        required, optionals = self._normalize_keyword_input(name, required,
-                                                            optionals,
-                                                            ignore_defaults)
+        required, optionals = TNaLaGmesIntentContainer.normalize_keyword_input(name, required,
+                                                                               optionals,
+                                                                               ignore_defaults)
         intent_name = self.name + ':' + name
         intent = IntentBuilder(intent_name)
 
@@ -399,7 +326,7 @@ class TNaLaGmesPadatiousIntentParser(TNaLaGmesBaseIntentParser):
 
     def register_intent(self, name, samples=None, handler=None,
                         ignore_defaults=False, validator=None):
-        samples = self._normalize_samples_input(name, samples, ignore_defaults)
+        samples = TNaLaGmesIntentContainer.normalize_samples_input(name, samples, ignore_defaults)
         intent_name = self.name + ':' + name
         self.engine.add_intent(intent_name, samples)
         data = {
@@ -419,14 +346,13 @@ class TNaLaGmesIntentContainer(object):
             TNaLaGmesPadatiousIntentParser(),
             TNaLaGmesBaseIntentParser()
         ]
+        self.parsers = {}
 
     def register_intent(self, name,
                         samples=None,
                         handler=None,
                         ignore_defaults=False):
-        samples = \
-            TNaLaGmesBaseIntentParser._normalize_samples_input(
-                name, samples, ignore_defaults)
+        samples = self.normalize_samples_input(name, samples, ignore_defaults)
         for engine in self.engine_list:
             engine.register_intent(name, samples, handler, True)
 
@@ -435,12 +361,115 @@ class TNaLaGmesIntentContainer(object):
                                 optionals=None,
                                 handler=None,
                                 ignore_defaults=False):
-        required, optionals = \
-            TNaLaGmesBaseIntentParser._normalize_keyword_input(
+        required, optionals = self.normalize_keyword_input(
                 name, required, optionals, ignore_defaults)
         for engine in self.engine_list:
             engine.register_keyword_intent(name, required, optionals,
                                            handler, True)
+        # self.register_parsetron(name, required, optionals)
+
+    @staticmethod
+    def normalize_keyword_input(name=None, required=None, optionals=None,
+                                ignore_defaults=False):
+        """
+        keywords may be a list, each will be loaded into a dict as {kw: [kw]}
+        keywords may be None, name will be used as single keyword {name: [name]}
+        keywords may be a dict, each key is a keyword + list of synonyms
+
+        keyword samples will be expanded from .voc files if ignore_defaults=False
+
+        :param name: str
+        :param required: dict/list/None
+        :param optionals: dict/list/None
+        :param ignore_defaults: bool
+        :return: required(dict), optionals(dict)
+        """
+        assert name or required
+        optionals = optionals or []
+        required = required or [name]
+
+        if required and isinstance(required, list):
+            bucket = {}
+            for r in required:
+                bucket[r] = [r]
+            required = bucket
+        if optionals and isinstance(optionals, list):
+            bucket = {}
+            for r in optionals:
+                bucket[r] = [r]
+            optionals = bucket
+
+        if not ignore_defaults:
+            for req in required:
+                data = TNaLaGmesBaseIntentParser.load_resource(req)
+                if data:
+                    # merge file data
+                    for new in data:
+                        if new not in required[req]:
+                            required[req].append(new)
+
+            for optional in optionals:
+                data = TNaLaGmesBaseIntentParser.load_resource(optional)
+                if data:
+                    # merge file data
+                    for new in data:
+                        optionals[optional] = optionals[optional] or []
+                        if new not in optionals[optional]:
+                            optionals[optional].append(new)
+
+        return required, optionals
+
+    @staticmethod
+    def normalize_samples_input(name=None, samples=None,
+                                ignore_defaults=False):
+        """
+        samples may be None and name will be used as single sample
+        samples may be a list of sample phrases to trigger this intent
+        if ignore_defaults is False, samples will be expanded from disk vocabulary
+
+        :param name:
+        :param samples:
+        :param ignore_defaults:
+        :return:
+        """
+        assert samples or name
+        samples = samples or [name]
+
+        if not ignore_defaults:
+            for req in samples:
+                data = TNaLaGmesBaseIntentParser.load_resource(req)
+                if data:
+                    # merge file data
+                    for new in data:
+                        if new not in samples:
+                            samples.append(new)
+
+        return samples
+
+    """
+    def register_parsetron(self, name, required=None, optionals=None):
+        required, optionals = self.normalize_keyword_input(name, required=required, optionals=optionals)
+        one_parse = None
+
+        for req in required:
+            word = Set(required[req])
+            one_parse = one_parse + word if one_parse else word
+
+        for optional in optionals:
+            word = Set(optionals[optional])
+            one_parse = one_parse + Optional(word) if one_parse else word
+
+        class ParsetronGrammar(Grammar):
+            GOAL = OneOrMore(one_parse)
+
+        def parse(utterance):
+            parser = RobustParser((ParsetronGrammar()))
+            tree, result = parser.parse(utterance)
+            disambiguation = result.one_parse
+            return disambiguation
+
+        self.parsers[name] = parse
+    """
 
     def learn(self):
         # train registered intents
@@ -473,7 +502,14 @@ class TNaLaGmesIntentContainer(object):
 
     def extract_multiple_commands(self, utterance, markers=None):
         markers = markers or ["."]
+
         # TODO check for multiple commands in sentence
+        # waiting for py3 parsetron
+        #for p in self.parsers:
+        #    print(self.parsers[p]())
+        #   from here extract disambiguation data to inject in intent
+        #   rebuild new commands # TODO test how rebuilt commands look
+
         return utterance.split(markers[0])
 
     def chose_best_intent(self, utterance, intent_list):
