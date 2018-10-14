@@ -12,7 +12,6 @@ from tnalagmes.util import resolve_resource_file
 # from parsetron import *  # waiting py3 support
 
 
-
 class TNaLaGmesIntent(TNaLaGmesConstruct):
     """
     what can you do
@@ -104,7 +103,6 @@ class TNaLaGmesIntent(TNaLaGmesConstruct):
 
 # wrappers for intent engines
 # TODO
-# Parsetron
 # Rasa
 
 from tnalagmes.util.nlp import textual_entailment

@@ -8,6 +8,7 @@ from tnalagmes.models.objects import Inventory
 
 
 class NPC(TNaLaGmesConstruct):
+    # TODO subclass agent from this ?
     """
     hello world
     what is your name
@@ -111,9 +112,11 @@ class NPC(TNaLaGmesConstruct):
         self.register_intent("hello", ["hi", "hey", "hello", "how are you", "yo"], hello)
 
 
-class Player(TNaLaGmesConstruct):
-    def __init__(self, health, name="you", mana=0, attack=1, magic=None, inventory=None):
-        TNaLaGmesConstruct.__init__(self, "player")
+class Agent(TNaLaGmesConstruct):
+    def __init__(self, health=9000, name="you", mana=0, attack=1,
+                 magic=None, inventory=None, direction=None,
+                 interacting_with=None, scene=None, coordinates=None):
+        TNaLaGmesConstruct.__init__(self, "player", direction, interacting_with, scene, coordinates)
         self.max_hp = health
         self.hp = health
         self.max_mp = mana
@@ -124,6 +127,14 @@ class Player(TNaLaGmesConstruct):
         self.items = inventory or Inventory()
         self.actions = ["Attack", "Magic", "Items"]
         self.name = name
+
+    def interact_with(self, construct):
+        self.interacting_with = construct
+
+    def look_to(self, direction):
+        direction = self.direction_to_int(direction)
+        if direction is not None:
+            self.direction = direction
 
     def attack(self):
         return random.randrange(self.attack_low, self.attack_high)
@@ -155,10 +166,9 @@ class Player(TNaLaGmesConstruct):
         else:
             return spell, magic_dmg
 
+    def handle_hello(self, intent):
+        return "hello world"
+
     def register_default_intents(self):
 
-        def hello(intent):
-            return "hello world"
-
-        self.register_intent("hello", ["hi", "hey", "hello", "how are you", "yo"], hello)
-
+        self.register_intent("hello", ["hi", "hey", "hello", "how are you", "yo"], self.handle_hello)

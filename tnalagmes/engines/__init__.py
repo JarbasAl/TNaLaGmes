@@ -4,7 +4,6 @@ from threading import Thread
 from tnalagmes import TNaLaGmesConstruct
 from tnalagmes.data.template_data import TERMINOLOGY, RANDOM_EVENTS, GAME_EVENTS
 from tnalagmes.models.objects import Calendar, Inventory, ProgressTracker
-from tnalagmes.models.agents import Player
 from pprint import pprint
 from os.path import expanduser, join, exists
 from os import makedirs
@@ -86,12 +85,10 @@ class TNaLaGmesEngine(TNaLaGmesConstruct):
     RANDOM_EVENTS = RANDOM_EVENTS
     name = "TNaLaGmesEngine"
 
-    def __init__(self, start_health=1000, from_json=True):
-        TNaLaGmesConstruct.__init__(self, "game_engine")
-        self.player = Player(start_health)
+    def __init__(self, from_json=True):
+        TNaLaGmesConstruct.__init__(self, "game_engine", scene=self)
         self.from_json = from_json
         self.random_events = []
-        self.inventory = Inventory()
         self.calendar = Calendar()
         self.tracker = ProgressTracker()
         self.playing = False
@@ -163,8 +160,8 @@ class TNaLaGmesEngine(TNaLaGmesConstruct):
                 self.register_event(event)
 
     def intro(self):
-        self.output = self.DATA["intro"]["intro"]
-        self.output = self.DATA["intro"]["conclusion"]
+        self.output = self.DATA.get("intro")("intro")
+        self.output = self.DATA.get("intro")("conclusion")
 
     def on_turn(self):
         self.output = self.calendar.pretty_date
@@ -294,6 +291,7 @@ class TNaLaGmesEngine(TNaLaGmesConstruct):
             answer += self.intent_parser.execute_intent(intent)
         if answer and answer != "?":
             return answer
+
         # query all game objects
         for obj in self.talking_objects:
             # parse intent

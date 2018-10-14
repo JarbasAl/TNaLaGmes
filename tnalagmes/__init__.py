@@ -1,5 +1,3 @@
-from padatious import IntentContainer
-
 from time import sleep
 import time
 import random
@@ -17,7 +15,6 @@ from tnalagmes.lang.parse_it import *
 from tnalagmes.lang.parse_pt import *
 from tnalagmes.lang.parse_sv import *
 from os.path import expanduser, join, exists
-from adapt.intent import IntentBuilder
 from os import makedirs
 import json
 
@@ -28,7 +25,15 @@ class TNaLaGmesConstruct(object):
     if not exists(cache_dir):
         makedirs(cache_dir)
 
-    def __init__(self, object_type="tnalagmes_object"):
+    def __init__(self, object_type="tnalagmes_object", direction=None,
+                 interacting_with=None, scene=None, coordinates=None):
+        """
+
+        :param object_type: human string for object type identifier
+        :param direction: direction object is facing 0 to 360 , where 0 is north
+        :param interacting_with: where the object will send queries
+        :param scene: where the object is located
+        """
 
         from tnalagmes.intents import TNaLaGmesIntentContainer
         self.intent_parser = TNaLaGmesIntentContainer()
@@ -40,6 +45,44 @@ class TNaLaGmesConstruct(object):
         self.waiting_for_user = False
         self._output = ""
         self.input = ""
+
+        self.direction = direction
+        self.interacting_with = interacting_with
+        self.scene = scene
+        self._coordinates = coordinates or [0]
+
+    def move_to(self, coordinates):
+        self._coordinates = coordinates
+
+    def direction_to_int(self, direction):
+        # handle front / left / right ?
+        # handle north/south/west/...
+        if direction == "up" or ("n" in direction and "w" not in direction and "e" not in direction):
+            return 0  # north
+        if direction == "down" or ("s" in direction and "w" not in direction and "e" not in direction):
+            return 180  # south
+        if direction == "right" or ("e" in direction and "s" not in direction and "n" not in direction):
+            return 90  # east
+        if direction == "left" or ("w" in direction and "s" not in direction and "n" not in direction):
+            return 270  # west
+        if "n" in direction and "w" in direction:
+            return 315  # northwest
+        if "s" in direction and "w" in direction:
+            return 225  # southwest
+        if "n" in direction and "e" in direction:
+            return 45  # ne
+        if "s" in direction and "e" in direction:
+            return 135  # se
+
+        # handle num degrees
+        if "degrees" in direction:
+            number = self.extract_number(direction)
+            if number:
+                # handle by 2 vs to 2
+                if "by" in direction:
+                    return self.direction + number
+                return number
+        return None # TODO raise exception?
 
     @staticmethod
     def fuzzy_match(x, against):

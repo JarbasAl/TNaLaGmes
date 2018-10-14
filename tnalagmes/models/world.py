@@ -1,26 +1,31 @@
 #!/usr/bin/python
-from tnalagmes import TNaLaGmesConstruct
+from tnalagmes.engines import TNaLaGmesEngine
 from tnalagmes.models.objects import Inventory
+import random
 
 
-class Scene(TNaLaGmesConstruct):
+class Scene(TNaLaGmesEngine):
+    # TODO basic physics engine, collision detection is the urgent part
+    name = "location"
     """
     go up / down / left / right / front /back
     go north / south / west / east ....
-    who is in the roon
+    who is in the room
     items in the room
     connected rooms
     describe room
     room _name
     """
-    def __init__(self, name, description="empty room", items=None, npcs=None, directions=None):
-        TNaLaGmesConstruct.__init__(self, "room")
-        self.name = name
+
+    def __init__(self, description="empty room", items=None, npcs=None, directions=None, dimensions=3):
+        TNaLaGmesEngine.__init__(self, "scene")
         self.description = description
         self.items = items or Inventory()
         self.npcs = npcs or {}
         self.connections = directions or {}
+        self.dimensions = dimensions
 
+    # TODO add object / npc to scene
     def add_connection(self, room, direction="front", message=None):
         if isinstance(room, str):
             room = Scene(room)
@@ -71,6 +76,11 @@ class Scene(TNaLaGmesConstruct):
         return ""
 
     def handle_describe(self, intent):
+        """
+
+        :param intent:
+        :return:
+        """
         return self.description
 
     def handle_look(self, intent):
@@ -107,8 +117,10 @@ class Scene(TNaLaGmesConstruct):
         self.register_intent("southeast", ["southeast"], self.handle_southeast)
         self.register_intent("southwest", ["southwest"], self.handle_southweast)
         self.register_intent("describe", ["describe room", "describe surroundings", "look"], self.handle_describe)
+        # TODO procedural
         self.register_intent("look", ["look {item}", "look at {item}", "describe {item}"], self.handle_look)
-        self.register_intent("get", ["get {item}", "acquire {item}", "fetch {item}", "pick {item}", "stash {item}"], self.handle_look)
+        self.register_intent("get", ["get {item}", "acquire {item}", "fetch {item}", "pick {item}", "stash {item}"],
+                             self.handle_look)
         self.register_intent("talk", ["talk with {npc}", "engage {npc}", "interact with {npc}"],
                              self.handle_look)
 
@@ -123,5 +135,34 @@ class Scene(TNaLaGmesConstruct):
         if npc in self.npcs:
             return self.npcs[npc].parse_command(utterance)
         return "talk to who?"
+
+
+class World(Scene):
+    name = "Text Universe"
+    """
+    volume / height / width / area / dimensions
+    number of rooms
+    teleport to room
+    how many players
+    how many npcs
+    how many items
+    """
+
+    def __init__(self, description="the text universe", player=None, scenes=None, dimensions=3):
+        Scene.__init__(self, dimensions=dimensions)
+        self.object_type = "world"
+        self.player = player
+        self.description = description
+        self.scenes = scenes or {"emptiness": Scene()}
+        self.current_scene = None
+        # TODO for fun add a npc called God
+        # player should usually not have access to this but instead to current_scene
+
+    # TODO add / remove scene into world
+    # TODO draw world (scenes have coordinates)
+    def place_player(self, scene_name=None):
+        scene_name = scene_name or random.choice(self.scenes)
+        self.current_scene = self.scenes.get(scene_name)
+        self.player.scene = self.current_scene
 
 
