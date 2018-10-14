@@ -119,7 +119,7 @@ GAME_EVENTS = {
                   'intro': ''},
     'hard_difficulty': {'conclusion': '', 'intro': ''},
     'heal': {'conclusion': "doctor's bill is $20",
-             'die': 'you died of',
+             'die': 'you died of ',
              'error': "you can't afford a doctor",
              'events': [],
              'intro': ''},

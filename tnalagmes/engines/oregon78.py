@@ -17,4 +17,4 @@ class Oregon78Engine(Oregon75Engine):
 
 if __name__ == "__main__":
     game = Oregon78Engine()
-    game.play()
+    game.run()

@@ -91,7 +91,7 @@ class TNaLaGmesEngine(TNaLaGmesConstruct):
         self.random_events = []
         self.calendar = Calendar()
         self.tracker = ProgressTracker()
-        self.playing = False
+        self.running = False
         self._thread = Thread(target=self._run)
         self._thread.setDaemon(True)
 
@@ -109,7 +109,7 @@ class TNaLaGmesEngine(TNaLaGmesConstruct):
                 "turn_data": self.DATA}
         pprint(data)
 
-    def register_default_intents(self):
+    def register_core_intents(self):
         # TODO translate options strings to 1, 2, 3, 4
 
         # engine interface
@@ -120,7 +120,6 @@ class TNaLaGmesEngine(TNaLaGmesConstruct):
         self.register_intent("quit", ["quit", "exit", "shutdown", "abort"], self.handle_quit)
 
     def register_event(self, event_object):
-        # TODO store in dict instead of list ?
         if isinstance(event_object, Event):
             self.random_events.append(event_object)
         elif isinstance(event_object, dict):
@@ -160,8 +159,8 @@ class TNaLaGmesEngine(TNaLaGmesConstruct):
                 self.register_event(event)
 
     def intro(self):
-        self.output = self.DATA.get("intro")("intro")
-        self.output = self.DATA.get("intro")("conclusion")
+        self.output = self.DATA.get("intro",{}).get("intro", "")
+        self.output = self.DATA.get("intro", {}).get("conclusion", "")
 
     def on_turn(self):
         self.output = self.calendar.pretty_date
@@ -180,11 +179,10 @@ class TNaLaGmesEngine(TNaLaGmesConstruct):
     def on_win(self):
         self.calendar.rollback_date(int(self.tracker.last_turn_fraction * self.calendar.days_per_turn))
         self.output = self.calendar.pretty_date
-        self.inventory.print_inventory()
-        self.playing = False
+        self.running = False
 
     def on_lose(self):
-        self.playing = False
+        self.running = False
 
     def on_damage(self):
         pass
@@ -205,11 +203,12 @@ class TNaLaGmesEngine(TNaLaGmesConstruct):
         pass
 
     def on_game_over(self):
-        # Turns have been exhausted or Oregon has been reached
+        # Turns have been exhausted or objective has been reached
         if self.tracker.completed:
             self.on_win()
         else:
             self.on_lose()
+        self.running = False
 
     def on_difficulty_modifier(self):
         if not self.tracker.difficulty_triggered():
@@ -221,18 +220,12 @@ class TNaLaGmesEngine(TNaLaGmesConstruct):
             self.on_hard_difficulty()
 
     def manual_fix_parse(self, text):
-        # replace vars
-        text = text.replace("{inv.money}",
-                            str(self.inventory.money))
-        text = text.replace("{inv.cash}",
-                            str(self.inventory.money))
-        text = text.replace("{inv.currency}",
-                            str(self.inventory.money))
-        return text + "\n"
+        # any parsing ou might want to reading from game data, ie replace {inv.money}
+        return text
 
-    def play(self):
+    def run(self):
         self._thread.start()
-        while self.playing:
+        while self.running:
             if self.waiting_for_user:
                 command = input(self.output)
                 self.parse_command(command)
@@ -242,14 +235,14 @@ class TNaLaGmesEngine(TNaLaGmesConstruct):
         self.waiting_for_user = False
 
     def _run(self):
-        self.playing = True
+        self.running = True
         self.on_start()
         self.register_events()
 
         while not self.calendar.is_final_turn and not self.tracker.completed:
             self.on_turn()
         self.on_game_over()
-        self.playing = False
+        self.running = False
 
     def save(self, path=None):
         pass
@@ -260,7 +253,7 @@ class TNaLaGmesEngine(TNaLaGmesConstruct):
     def quit(self):
         if self.ask_yes_no(self.DATA.get("quit_message",
                                          "really want to quit?")):
-            self.playing = False
+            self.running = False
             self.on_game_over()
 
     def handle_quit(self, intent):

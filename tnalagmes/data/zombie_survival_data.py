@@ -110,9 +110,9 @@ GAME_EVENTS = {
                   'intro': 'you never found the cure'},
     'hard_difficulty': {'conclusion': 'violent thoughts plague your mind',
                         'intro': 'You notice a mirror, your eyes are turning red'},
-    'heal': {'conclusion': "you prepare 20 vials of virus retardant, you log your activities",
-             'die': 'you died of',
-             'error': "you don't have more space to continue your research, you lost track and administered a deadly dose",
+    'heal': {'conclusion': "you prepare 20 vials of virus retardant",
+             'die': 'you died of ',
+             'error': "you are out of antidote",
              'events': [],
              'intro': ''},
     'intro': {
@@ -137,4 +137,4 @@ GAME_EVENTS = {
              'intro': 'what are we scavenging for'},
     'turn': {'die': 'you ran out of supplies and starved to death',
              'intro': '(1) go scavenging, (2) explore, (3) travel'},
-    'win': {'intro': 'you made it to the lab'}}
+'win': {'intro': 'you made it to the lab\nyou found the cure on time, however you are no scientist\nyou cure yourself and use every last bit of the ZVirus cure\n you realize the world is still full of zombies...\nhopefully you are now immune, happy zombie hunting!'}}

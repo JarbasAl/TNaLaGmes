@@ -15,7 +15,7 @@ class Oregon75Engine(TNaLaGmesEngine):
     name = "Oregon75Engine"
 
     def __init__(self, from_json=False):
-        TNaLaGmesEngine.__init__(self, "game_engine", from_json)
+        TNaLaGmesEngine.__init__(self, from_json)
         self.turn = TurnState()
         self.inventory = SimpleInventory()
 
@@ -72,7 +72,6 @@ class Oregon75Engine(TNaLaGmesEngine):
         self.output = self.calendar.pretty_date
         self.output = self.inventory.pretty_inventory
         self.output = self.DATA.get("win", {}).get("conclusion", "")
-        self.playing = False
 
     def on_lose(self):
         self.output = self.DATA.get("lose", {}).get("intro", "")
@@ -83,8 +82,6 @@ class Oregon75Engine(TNaLaGmesEngine):
         if not response:
             self.output = self.DATA.get("lose", {}).get("error", "")
         self.output = self.DATA.get("lose", {}).get("conclusion", "")
-
-        self.playing = False
 
     def on_maintenance(self):
         response = self.ask_numeric(self.DATA.get("maintenance", {}).get("intro", ""), 1, 3)
@@ -112,7 +109,7 @@ class Oregon75Engine(TNaLaGmesEngine):
                 self.output = self.DATA.get("damage", {}).get("error", "") + "INJURIES"
             else:
                 self.output = self.DATA.get("damage", {}).get("error", "") + "PNEUMONIA"
-            self.on_lose()
+            self.on_game_over()
         return
 
     def on_chance_encounter(self):
@@ -181,7 +178,7 @@ class Oregon75Engine(TNaLaGmesEngine):
             self.output = self.get_entity("enemy") + self.DATA.get("enemy_encounter", {}).get("hostile_conclusion", "")
             if self.inventory.ammunition.value < 0:
                 self.output = self.DATA.get("enemy_encounter", {}).get("die", "") + self.get_entity("enemy")
-                self.on_lose()
+                self.on_game_over()
 
     def on_easy_difficulty(self):
         # medium difficulty
@@ -274,14 +271,14 @@ class Oregon75Engine(TNaLaGmesEngine):
         return True
 
     def on_turn(self):
-        if not self.playing:
+        if self.tracker.completed:
             return
         self.output = self.calendar.pretty_date
         self.inventory.normalize_negative_values()
 
         # Resolve health issues from the previous turn
         if not self.on_heal():
-            self.on_lose()
+            self.on_game_over()
             return
 
         # Show inventory status and mileage
@@ -299,7 +296,7 @@ class Oregon75Engine(TNaLaGmesEngine):
         # Eating
         if self.inventory.supplies.value < 13:
             self.output = self.DATA.get("turn", {}).get("die", "")
-            self.on_lose()
+            self.on_game_over()
             return
 
         self.on_maintenance()
@@ -378,8 +375,9 @@ class Oregon75Engine(TNaLaGmesEngine):
         self.inventory.ammunition.subtract(10)
         self.inventory.medicine.subtract(5)
         if self.inventory.medicine.value <= 0:
+            # TODO use data
             self.output = "YOU DIE OF SNAKEBITE SINCE YOU HAVE NO MEDICINE"
-        self.on_lose()
+        self.on_game_over()
         self.output = self.RANDOM_EVENTS.get("poison", {}).get("conclusion", "")
 
     def animal_attack(self):
@@ -492,7 +490,7 @@ class Oregon75Engine(TNaLaGmesEngine):
         return text + "\n"
 
     def on_start(self):
-        self.playing = True
+        self.running = True
         if self.ask_yes_no("Do you need instructions?"):
             self.intro()
         self.inventory = SimpleInventory()
@@ -562,4 +560,4 @@ class Oregon75Engine(TNaLaGmesEngine):
 
 if __name__ == "__main__":
     game = Oregon75Engine()
-    game.play()
+    game.run()

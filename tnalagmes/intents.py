@@ -14,29 +14,24 @@ from tnalagmes.util import resolve_resource_file
 
 class TNaLaGmesIntent(TNaLaGmesConstruct):
     """
-    what can you do
-    how do i trigger you
-    conflicting intents
-    what is your intent_engine
-    how many entities matched
+    what can you do # self.description
+    how do i trigger you  # self.samples
+    alternative meanings of question  # other intents that could/will trigger / self.disambiguation
+    what is your engine
+    why did you trigger  # matches
+    what did you answer  # last answer
+    what is the question # last utterance
+    can you answer X  # judge if good question
+    does answer X look correct # judge if good answer to question
     """
 
     def __init__(self, data=None):
         data = data or {}
         TNaLaGmesConstruct.__init__(self)
-        self.matches = []
-        self.confidence = data.get("confidence") or data.get("conf")
-        self.intent_engine = data.get("intent_engine")
-        self.intent_name = data.get("intent_name",
-                                    "TNaLaGmesIntent:TestIntent")
-        self.disambiguation = data.get("disambiguation", {})
-        self.description = data.get("description")
         self.handler = None
-        self.validator = None
-        self.required = []
-        self.optionals = []
-        self.samples = []
-        self.utterance = ""
+        self.question_validator = None
+        self.answer_validator = None
+        self.from_json(data)
 
     def __getitem__(self, key):
         return self.as_json.get(key)
@@ -55,8 +50,11 @@ class TNaLaGmesIntent(TNaLaGmesConstruct):
     def bind_handler(self, handler):
         self.handler = handler
 
-    def bind_validator(self, handler):
-        self.validator = handler
+    def bind_question_validator(self, handler):
+        self.question_validator = handler
+
+    def bind_answer_validator(self, handler):
+        self.answer_validator = handler
 
     def from_json(self, data):
         self.confidence = data.get("confidence") or data.get("conf")
@@ -64,12 +62,13 @@ class TNaLaGmesIntent(TNaLaGmesConstruct):
         self.intent_name = data.get("intent_name",
                                     "TNaLaGmesIntent:TestIntent")
         self.disambiguation = data.get("disambiguation", {})
-        self.description = data.get("description")
+        self.description = data.get("description", "")
         self.samples = data.get("samples", [])
-        self.optionals = data.get("optionals", [])
-        self.required = data.get("required", [])
+        self.optionals = data.get("optionals", {})
+        self.required = data.get("required", {})
         self.matches = data.get("matches", [])
         self.utterance = data.get("utterance", "")
+        self.answer = data.get("answer", "")
         return self
 
     @property
@@ -85,19 +84,41 @@ class TNaLaGmesIntent(TNaLaGmesConstruct):
         bucket["required"] = self.required
         bucket["matches"] = self.matches
         bucket["utterance"] = self.utterance
+        bucket["answer"] = self.answer
         return bucket
 
-    def can_solve(self, utterance):
+    def validate_question(self, intent):
         """
-        when asked if you can solve this utterance return True or False
+        when asked if you can solve this intent return True or False
+
         this step is called for disambiguation after an intent already matched
 
-        return True -> can solve utterance
-        return False -> can not solve utterance
+        return True -> can solve intent
+        return False -> can not solve intent
         """
-        if self.validator:
-            self.utterance = utterance
-            return self.validator(self)
+        if self.question_validator:
+            if isinstance(intent, str):
+                self.utterance = intent
+            else:
+                self.utterance = intent.utterance
+            return self.question_validator(self)
+        return True
+
+    def validate_answer(self, intent):
+        """
+        when asked if the answer of this intent looks good return True or False
+
+        this step is called for disambiguation after an intent already matched
+
+        return True -> intent looks good
+        return False -> intent looks bad
+        """
+        if self.answer_validator:
+            if isinstance(intent, str):
+                self.answer = intent
+            else:
+                self.answer = intent.answer
+            return self.answer_validator(self)
         return True
 
 
@@ -106,7 +127,6 @@ class TNaLaGmesIntent(TNaLaGmesConstruct):
 # Rasa
 
 from tnalagmes.util.nlp import textual_entailment
-from os.path import join, dirname
 
 
 class TNaLaGmesBaseIntentParser(object):
@@ -121,7 +141,7 @@ class TNaLaGmesBaseIntentParser(object):
         intent = TNaLaGmesIntent()
         intent.from_json(data)
         intent.bind_handler(handler)
-        intent.bind_validator(validator)
+        intent.bind_question_validator(validator)
         self.intents[intent.intent_name] = intent
         return intent
 
@@ -350,6 +370,11 @@ class TNaLaGmesIntentContainer(object):
                         samples=None,
                         handler=None,
                         ignore_defaults=False):
+        if isinstance(name, TNaLaGmesIntent):
+            intent = name
+            name = intent.intent_name
+            handler = intent.handler
+            return
         samples = self.normalize_samples_input(name, samples, ignore_defaults)
         for engine in self.engine_list:
             engine.register_intent(name, samples, handler, True)
@@ -514,24 +539,30 @@ class TNaLaGmesIntentContainer(object):
         intent_list = [i for i in intent_list if i]
 
         if not len(intent_list):
-            return None, 0
+            return None
         elif len(intent_list) == 1:
             best_intent = intent_list[0]
         else:
             best_intent = None
 
-            # ask intents to simulate triggering
+            # ask intents to validate utterance
+            # "hey you are going to trigger, are you sure you can answer this?"
             for idx, inte in enumerate(intent_list):
                 if isinstance(inte, dict):
                     intent = TNaLaGmesIntent()
                     intent.from_json(inte)
                     inte = intent
-                inte.bind_validator(self.fetch_validator(inte))
-                if not inte.can_solve(utterance):
+                inte.bind_question_validator(self.fetch_question_validator(inte))
+                if not inte.validate_question(utterance):
                     intent_list[idx] = None
 
-            # prune list the maximum possible
+            # prune list from None s
             intent_list = [i for i in intent_list if i]
+
+            # TODO check answer validators
+            # create copy object of the intent
+            # simulate trigger
+            # pass answer to validator
 
             # chose best adapt intent
             best_score = 0
@@ -576,14 +607,24 @@ class TNaLaGmesIntentContainer(object):
                     return i.handler
         return None
 
-    def fetch_validator(self, intent):
+    def fetch_question_validator(self, intent):
         if isinstance(intent, dict):
             intent = TNaLaGmesIntent().from_json(intent)
         for engine in self.engine_list:
             if engine.name == intent.intent_engine:
                 i = engine.intents.get(intent.intent_name)
                 if i:
-                    return i.validator
+                    return i.question_validator
+        return None
+
+    def fetch_answer_validator(self, intent):
+        if isinstance(intent, dict):
+            intent = TNaLaGmesIntent().from_json(intent)
+        for engine in self.engine_list:
+            if engine.name == intent.intent_engine:
+                i = engine.intents.get(intent.intent_name)
+                if i:
+                    return i.answer_validator
         return None
 
     def disambiguate(self, commands, lang="en-us"):

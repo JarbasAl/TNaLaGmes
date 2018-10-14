@@ -15,4 +15,4 @@ class ZVirus(Oregon75Engine):
 
 if __name__ == "__main__":
     game = ZVirus()
-    game.play()
+    game.run()

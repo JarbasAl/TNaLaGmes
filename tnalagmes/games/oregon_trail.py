@@ -1,6 +1,5 @@
 from tnalagmes.engines.oregon75 import Oregon75Engine, Calendar
 from tnalagmes.data.oregon_trail_data import GAME_EVENTS, RANDOM_EVENTS, TERMINOLOGY
-from random import choice
 from datetime import date
 
 
@@ -18,4 +17,4 @@ class OregonTrail(Oregon75Engine):
 
 if __name__ == "__main__":
     game = OregonTrail()
-    game.play()
+    game.run()
