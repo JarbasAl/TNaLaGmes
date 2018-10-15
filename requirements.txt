@@ -6,3 +6,5 @@ python-dateutil
 mtranslate
 requests
 psutil
+bs4
+all_the_chatbots

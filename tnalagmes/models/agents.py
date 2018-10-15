@@ -1,11 +1,11 @@
 #!/usr/bin/python
-from datetime import date
-from datetime import timedelta
-from datetime import datetime
 import random
 from tnalagmes import TNaLaGmesConstruct
 from tnalagmes.models.objects import Inventory
-
+from tnalagmes.engines import TNaLaGmesEngine
+import all_the_chatbots
+import logging
+logging.getLogger("urllib3").setLevel(logging.WARNING)
 
 class NPC(TNaLaGmesConstruct):
     # TODO subclass agent from this ?
@@ -112,21 +112,12 @@ class NPC(TNaLaGmesConstruct):
         self.register_intent("hello", ["hi", "hey", "hello", "how are you", "yo"], hello)
 
 
-class Agent(TNaLaGmesConstruct):
-    def __init__(self, health=9000, name="you", mana=0, attack=1,
-                 magic=None, inventory=None, direction=None,
-                 interacting_with=None, scene=None, coordinates=None):
-        TNaLaGmesConstruct.__init__(self, "agent", direction, interacting_with, scene, coordinates)
-        self.max_hp = health
-        self.hp = health
-        self.max_mp = mana
-        self.mp = mana
-        self.attack_low = attack - 20
-        self.attack_high = attack + 20
-        self.magic = magic or []
-        self.items = inventory or Inventory()
-        self.actions = ["Attack", "Magic", "Items"]
+class Agent(TNaLaGmesEngine):
+    def __init__(self, name="you", autostart=False):
+        TNaLaGmesEngine.__init__(self)
         self.name = name
+        if autostart:
+            self._thread.start()  # start agent
 
     def interact_with(self, construct):
         self.interacting_with = construct
@@ -172,3 +163,46 @@ class Agent(TNaLaGmesConstruct):
     def register_default_intents(self):
 
         self.register_intent("hello", ["hi", "hey", "hello", "how are you", "yo"], self.handle_hello)
+
+    def on_turn(self):
+        print("agentt should perform action here")
+
+    def on_start(self):
+        print("agent ready")
+
+
+class ChatAgent(Agent):
+    def __init__(self, name):
+        Agent.__init__(self, name)
+        self.chat_handler = None
+
+    def on_turn(self):
+        if not self.waiting_for_user:
+            self.output = self.chat_handler(self.input)
+        self.waiting_for_user = True
+
+    def on_start(self):
+        if self.chat_handler is None:
+            handler = all_the_chatbots.bot_map().get(self.name)
+            if not handler:
+                def handler(text):
+                    return "?"
+            self.chat_handler = handler
+        self.submit_command("what is your name?")
+
+    @staticmethod
+    def create_chatbot(name=None):
+        name = name or random.choice(all_the_chatbots.bot_list())
+        return ChatAgent(name=name)
+
+
+# Agents for Notable ChatBots
+NeuralConvo = ChatAgent.create_chatbot("neuralconvo")
+TheCatterpillar = ChatAgent.create_chatbot("the_catterpillar")
+Mitsuku = ChatAgent.create_chatbot("mitsuku")
+Aristo = ChatAgent.create_chatbot("aristo")
+Euclid = ChatAgent.create_chatbot("euclid")
+
+if __name__ == "__main__":
+    chat = Mitsuku
+    chat.run()

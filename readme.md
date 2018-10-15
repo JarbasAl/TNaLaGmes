@@ -23,8 +23,40 @@ to play the original oregon trail
     from tnalagmes.games import OregonTrail
     
     game = OregonTrail()
-    game.play()
+    game.run()
+
+or maybe you prefer a zombie survival game
+
+    from tnalagmes.games.zombie import ZVirus
     
+    game = ZVirus()
+    game.run()
+
+
+Chatbot agents are provided via [all_the_chatbots](https://github.com/JarbasAl/all_the_chatbots), you need internet for this
+
+
+    from tnalagmes.models.agents import Mitsuku   # notable chat agents can be imported directly
+    
+    from tnalagmes.models.agents import ChatAgent  # you can create your own and override on_turn
+    
+    hitler = ChatAgent.create_agent("hitler")  # get an agent from all_the_chatbots
+    
+    Mitsuku.run()
+
+    # output bellow
+    
+    > My name is Mitsuku.
+    hello
+    > Hi there. How are you?
+    tell me a joke
+    > My mates been drinking brake fluid for 6 years but he says he's not addicted. He reckons he can stop anytime he wants.
+    > Thanks for the information.
+    do you believe in god?
+    > <image>http://www.square-bear.co.uk/mitsuku/gallery/god.jpg</image>
+    > I believe there is probably something out there but I doubt it is a man with a long beard sat on a throne.
+
+
 to do something useful as part of a project look how i made a Calendar
 
 
