@@ -1,5 +1,5 @@
 from tnalagmes import TNaLaGmesConstruct
-from os.path import exists
+from os.path import exists, join, expanduser
 from adapt.intent import IntentBuilder
 from adapt.engine import IntentDeterminationEngine
 from adapt.context import ContextManagerFrame
@@ -10,6 +10,7 @@ import random
 from tnalagmes.util.log import LOG
 from tnalagmes.util import resolve_resource_file
 # from parsetron import *  # waiting py3 support
+from os import makedirs
 
 
 class TNaLaGmesIntent(TNaLaGmesConstruct):
@@ -330,7 +331,7 @@ class TNaLaGmesPadatiousIntentParser(TNaLaGmesBaseIntentParser):
 
     def __init__(self):
         TNaLaGmesBaseIntentParser.__init__(self)
-        self.engine = IntentContainer(TNaLaGmesConstruct.cache_dir)
+        self.engine = IntentContainer(TNaLaGmesIntentContainer.cache_dir)
 
     def calc_intent(self, utterance, lang="en-us"):
         best_intent = self.engine.calc_intent(utterance)
@@ -364,7 +365,10 @@ class TNaLaGmesPadatiousIntentParser(TNaLaGmesBaseIntentParser):
 
 
 class TNaLaGmesIntentContainer(object):
+    cache_dir = join(expanduser("~"), "tnalagmes", "intent_cache")
     name = "TNaLaGmesIntentContainer"
+    if not exists(cache_dir):
+        makedirs(cache_dir)
 
     def __init__(self):
         self.engine_list = [
