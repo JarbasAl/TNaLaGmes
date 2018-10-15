@@ -30,12 +30,7 @@ def resolve_resource_file(res_name, lang="en-us"):
     """Convert a resource into an absolute filename.
 
     Resource names are in the form: 'filename.ext'
-    or 'path/filename.ext'
-
-    The system wil look for ~/.mycroft/res_name first, and
-    if not found will look at /opt/mycroft/res_name,
-    then finally it will look for res_name in the 'mycroft/res'
-    folder of the source code package.
+    or 'path/filename.ext' or 'file name'
 
     Args:
         res_name (str): a resource path/name
@@ -60,7 +55,7 @@ def resolve_resource_file(res_name, lang="en-us"):
         return filename
 
     # next look for it in locale
-    filename = os.path.join(os.path.dirname(__file__), '..', 'locale',lang, res_name)
+    filename = os.path.join(os.path.dirname(__file__), '..', 'locale', lang, res_name)
     filename = os.path.abspath(os.path.normpath(filename))
     if os.path.isfile(filename):
         return filename
@@ -78,16 +73,30 @@ def resolve_resource_file(res_name, lang="en-us"):
         return filename
 
     # Let's check default internal file formats
-    if not filename.endswith(".voc") and not filename.endswith(".intent") and not filename.endswith(".rx"):
-        vocs = resolve_resource_file(filename+".voc")
+    if not filename.endswith(".voc") and not filename.endswith(".intent") and \
+            not filename.endswith(".rx") and not filename.endswith(".dialog"):
+        vocs = resolve_resource_file(filename + ".voc")
         if vocs:
             return vocs
-        vocs = resolve_resource_file(filename+".intent")
+        vocs = resolve_resource_file(filename + ".intent")
         if vocs:
             return vocs
-        vocs = resolve_resource_file(filename+".rx")
+        vocs = resolve_resource_file(filename + ".rx")
         if vocs:
             return vocs
+        vocs = resolve_resource_file(filename + ".dialog")
+        if vocs:
+            return vocs
+
+    # Check for common spacing substitutions
+    if " " in filename:
+        vocs = resolve_resource_file(filename.replace(" ", ".").strip())
+        if vocs:
+            return vocs
+        vocs = resolve_resource_file(filename.replace(" ", "_").strip())
+        if vocs:
+            return vocs
+
     return None  # Resource cannot be resolved
 
 
