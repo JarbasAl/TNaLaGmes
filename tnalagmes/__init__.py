@@ -14,15 +14,13 @@ from tnalagmes.lang.parse_fr import *
 from tnalagmes.lang.parse_it import *
 from tnalagmes.lang.parse_pt import *
 from tnalagmes.lang.parse_sv import *
-from os.path import expanduser, join, exists
-from os import makedirs
+from os.path import exists
 import json
 
 
 class TNaLaGmesConstruct(object):
-    # is input matches these vocabs index will be selected in ask_numeric
-    OPTION_VOCS = [["shop", "run"], ["explore", "attack"], ["advance"], ["avoid"]]
-
+    # if input matches these vocabs index will be selected in ask_numeric
+    OPTION_VOCS = []
 
     def __init__(self, object_type="tnalagmes_object", direction=None,
                  interacting_with=None, scene=None, coordinates=None):
@@ -53,9 +51,36 @@ class TNaLaGmesConstruct(object):
     def move_to(self, coordinates):
         self._coordinates = coordinates
 
-    def direction_to_int(self, direction):
-        # handle front / left / right ?
-        # handle north/south/west/...
+    @staticmethod
+    def direction_to_int(direction, reference=0):
+        """
+        match a string into a degree between 0 and 360 where 0 is north and direction if clockwise
+
+        :param direction: string
+        :param reference: reference angle if direction is relative, "increase angle by 2"
+        :return: int
+        """
+        # check resource matches
+        if TNaLaGmesConstruct.match_resource(direction, "up") or TNaLaGmesConstruct.match_resource(direction, "north") \
+                or TNaLaGmesConstruct.match_resource(direction, "front"):
+            return 0
+        if TNaLaGmesConstruct.match_resource(direction, "down") or TNaLaGmesConstruct.match_resource(direction, "south") \
+                or TNaLaGmesConstruct.match_resource(direction, "back"):
+            return 180
+        if TNaLaGmesConstruct.match_resource(direction, "left") or TNaLaGmesConstruct.match_resource(direction, "west"):
+            return 270
+        if TNaLaGmesConstruct.match_resource(direction, "right") or TNaLaGmesConstruct.match_resource(direction, "east"):
+            return 90
+        if TNaLaGmesConstruct.match_resource(direction, "northeast"):
+            return 45
+        if TNaLaGmesConstruct.match_resource(direction, "northwest"):
+            return 315
+        if TNaLaGmesConstruct.match_resource(direction, "southeast"):
+            return 135
+        if TNaLaGmesConstruct.match_resource(direction, "southwest"):
+            return 225
+
+        # parse text
         if direction == "up" or ("n" in direction and "w" not in direction and "e" not in direction):
             return 0  # north
         if direction == "down" or ("s" in direction and "w" not in direction and "e" not in direction):
@@ -74,14 +99,18 @@ class TNaLaGmesConstruct(object):
             return 135  # se
 
         # handle num degrees
-        if "degrees" in direction:
-            number = self.extract_number(direction)
-            if number:
-                # handle by 2 vs to 2
+        number = TNaLaGmesConstruct.extract_number(direction)
+        if number:
+            if TNaLaGmesConstruct.match_resource(direction, "radians"):
+                # TODO convert number to degrees
+                pass
+            if TNaLaGmesConstruct.match_resource(direction, "angle") or "degrees" in direction or \
+                    TNaLaGmesConstruct.match_resource(direction, "radians"):
+                # handle "by 2" vs "to 2"
                 if "by" in direction:
-                    return self.direction + number
+                    return reference + number
                 return number
-        return None # TODO raise exception?
+        return None  #  raise exception?
 
     @staticmethod
     def fuzzy_match(x, against):
@@ -290,19 +319,38 @@ class TNaLaGmesConstruct(object):
         self._output += text + "\n"
 
     def ask_yes_no(self, prompt):
+        """
+        ask question and expect yes or no response
+        ask in a loop until answer matches "yes" or "no" resource
+
+        :param prompt: question to ask
+        :return: True if yes, False if no
+        """
         self.output = prompt
         self.waiting_for_user = True
         while self.waiting_for_user:
             sleep(0.1)
         response = self.normalize(self.input)
-        if response[0] == 'y':
+        if self.match_resource(response[0], "yes"):
             return True
-        if response[0] == 'n':
+        if self.match_resource(response[0], "no"):
             return False
         else:
             return self.ask_yes_no(prompt)
 
     def ask_numeric(self, prompt, lower_bound=None, upper_bound=None):
+        """
+        asks a question in a loop until a numeric answer is received
+
+        text is matched against self.OPTION_VOCS for synonym translation
+
+        ask again if number does not fit into lower_bound < number < upper_bound
+
+        :param prompt: question to ask
+        :param lower_bound: minimum number
+        :param upper_bound: maximum number
+        :return: number
+        """
         self.output = prompt
         self.waiting_for_user = True
         while self.waiting_for_user:
@@ -348,13 +396,34 @@ class TNaLaGmesConstruct(object):
         pass
 
     def calc_intents(self, utterance, lang="en-us"):
+        """
+        raw intent match data
+        :param utterance:
+        :param lang:
+        :return:
+        """
         return self.intent_parser.calc_intent(utterance)
 
     def register_intent(self, name, samples, handler=None):
+        """
+        register samples based intent (padatious)
+        :param name: intent name
+        :param samples: list of sample phrases or resource files, if None becomes [name]
+        :param handler: handle intent and return string response
+        :return:
+        """
         self.intent_parser.register_intent(name, samples)
 
     @staticmethod
     def load_resource(name, sep="\n", is_json=False):
+        """
+       search all paths for a resource file (.voc/.intent/.dialog/.rx)
+
+        :param name: resource filename or path
+        :param sep: separate entries at this, default \n
+        :param is_json: load as json
+        :return:
+        """
         path = resolve_resource_file(name)
         if path and exists(path):
             with open(path, "r") as f:
@@ -366,6 +435,13 @@ class TNaLaGmesConstruct(object):
 
     @staticmethod
     def match_resource(utterance, resource):
+        """
+        if utterance matches a resource file (.voc/.intent/.dialog/.rx) return True
+
+        :param utterance:
+        :param resource:
+        :return:
+        """
         lines = TNaLaGmesConstruct.load_resource(resource)
         if lines:
             for l in lines:
@@ -376,9 +452,21 @@ class TNaLaGmesConstruct(object):
         return False
 
     def register_keyword_intent(self, name, required=None, optionals=None, handler=None, ignore_default_kw=False):
+        """
+
+        regster keyword based intent (adapt)
+
+        :param name:
+        :param required: list of [required keywords] or dict of kw: [synonyms] or if None becomes [name]
+        :param optionals: list of [optional keywords] or dict of kw: [synonyms] or if None becomes [name]
+        :param handler: intent handler, returns string response
+        :param ignore_default_kw: if false do not expand vocabulary
+        :return:
+        """
         self.intent_parser.register_keyword_intent(name, required, optionals, handler, ignore_default_kw)
 
     def parse_command(self, utterance):
+        """ chooses and executes best intent returning result """
         # parse intent
         intents = self.calc_intents(utterance)
         for intent in intents:

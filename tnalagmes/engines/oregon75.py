@@ -7,7 +7,7 @@ from tnalagmes.engines.oregon import SimpleInventory, TurnState
 class Oregon75Engine(TNaLaGmesEngine):
     """ so called because logic is ported from 1975 basic version of oregon trail"""
     # https://www.filfre.net/misc/oregon1975.bas
-
+    OPTION_VOCS = [["shop", "run"], ["explore", "attack"], ["advance"], ["avoid"]]
     TERMINOLOGY = TERMINOLOGY
     DATA = GAME_EVENTS
     RANDOM_EVENTS = RANDOM_EVENTS
