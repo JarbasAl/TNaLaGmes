@@ -20,10 +20,9 @@ import json
 
 
 class TNaLaGmesConstruct(object):
-    cache_dir = join(expanduser("~"), "tnalagmes", "intent_cache")
+    # is input matches these vocabs index will be selected in ask_numeric
+    OPTION_VOCS = [["shop", "run"], ["explore", "attack"], ["advance"], ["avoid"]]
 
-    if not exists(cache_dir):
-        makedirs(cache_dir)
 
     def __init__(self, object_type="tnalagmes_object", direction=None,
                  interacting_with=None, scene=None, coordinates=None):
@@ -281,7 +280,14 @@ class TNaLaGmesConstruct(object):
         else:
             if text is None or not text.strip():
                 return
-        self._output += self.manual_fix_parse(text) + "\n"
+        # custom substitutions
+        text = self.manual_fix_parse(text)
+
+        # check for dialog files
+        lines = self.load_resource(text)
+        if lines:
+            text = random.choice(lines)
+        self._output += text + "\n"
 
     def ask_yes_no(self, prompt):
         self.output = prompt
@@ -301,7 +307,14 @@ class TNaLaGmesConstruct(object):
         self.waiting_for_user = True
         while self.waiting_for_user:
             sleep(0.1)
-        response = self.extract_number(self.input)
+        text = self.input
+        response = None
+        for idx, voc in enumerate(self.OPTION_VOCS):
+            for v in voc:
+                if self.match_resource(text, v):
+                    response = idx
+                    break
+        response = response or self.extract_number(text)
         try:
             value = int(response)
         except ValueError:
@@ -351,16 +364,26 @@ class TNaLaGmesConstruct(object):
                 return lines.split(sep)
         return None
 
+    @staticmethod
+    def match_resource(utterance, resource):
+        lines = TNaLaGmesConstruct.load_resource(resource)
+        if lines:
+            for l in lines:
+                if l.lower().strip() in utterance.lower().strip():
+                    return True
+        if resource.lower().strip() in utterance.lower().strip():
+            return True
+        return False
+
     def register_keyword_intent(self, name, required=None, optionals=None, handler=None, ignore_default_kw=False):
         self.intent_parser.register_keyword_intent(name, required, optionals, handler, ignore_default_kw)
 
     def parse_command(self, utterance):
         # parse intent
         intents = self.calc_intents(utterance)
-        text = ""
         for intent in intents:
-            text += self.intent_parser.execute_intent(intent)
-        return text or "?"
+            self.output += self.intent_parser.execute_intent(intent)
+        return self.output or "?"
 
 
 
