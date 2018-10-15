@@ -1,8 +1,7 @@
 import random
 from tnalagmes.data.oregon_trail_data import TERMINOLOGY, RANDOM_EVENTS, GAME_EVENTS
 from tnalagmes.engines import TNaLaGmesEngine, Event
-from tnalagmes.engines.oregon import SimpleInventory, TurnState, Calendar
-from datetime import date
+from tnalagmes.engines.oregon import SimpleInventory, TurnState
 
 
 class Oregon75Engine(TNaLaGmesEngine):
@@ -12,6 +11,7 @@ class Oregon75Engine(TNaLaGmesEngine):
     TERMINOLOGY = TERMINOLOGY
     DATA = GAME_EVENTS
     RANDOM_EVENTS = RANDOM_EVENTS
+
     name = "Oregon75Engine"
 
     def __init__(self, from_json=False):
