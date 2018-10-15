@@ -11,7 +11,7 @@ class Oregon78Engine(Oregon75Engine):
     RANDOM_EVENTS = RANDOM_EVENTS
     name = "Oregon78Engine"
 
-    def __init__(self, name=None, from_json=False):
+    def __init__(self, from_json=False):
         Oregon75Engine.__init__(self, from_json)
 
 

@@ -109,21 +109,7 @@ class SimpleInventory(Inventory):
 
 class OregonEngine(TNaLaGmesEngine):
     """ so called because logic is based on oregon trail"""
-    # TODO, bellow is old code from oregon75
     TERMINOLOGY = TERMINOLOGY
     DATA = GAME_EVENTS
     RANDOM_EVENTS = RANDOM_EVENTS
     name = "OregonEngine"
-
-    def __init__(self, name=None, from_json=False):
-        TNaLaGmesEngine.__init__(self, "game_engine", from_json)
-        self.turn = TurnState()
-
-    def register_default_intents(self):
-        # engine interface
-        self.register_intent("save", ["save {file}", "save"], self.handle_save)
-        self.register_intent("load", ["load {file}", "load"], self.handle_load)
-        self.register_intent("export", ["export {file}"], self.handle_export)
-        self.register_intent("import", ["import {file}"], self.handle_import)
-        self.register_intent("quit", ["quit", "exit", "shutdown", "abort"], self.handle_quit)
-        return

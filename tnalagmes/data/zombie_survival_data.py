@@ -116,7 +116,7 @@ GAME_EVENTS = {
              'events': [],
              'intro': ''},
     'intro': {
-        'conclusion': 'you hear rumours about a cure being successfully developed in a lab just before all communication broke down...\nfind the cure before you turn',
+        'conclusion': 'you hear rumours about a cure being successfully developed in a lab just before all communication broke down...\nyou travel with a portable generator, food, clothing, a shotgun and some antidote that delays the onset of the virus\nmanage your resources to fit in 1000 slots\nfind the cure before you turn',
         'intro': 'It\'s been 1 year since the outbreak, yesterday you got bitten, damn zombie found a hole in your defences...'},
     'inventory': {'conclusion': 'after all your choices, you now have '
                                 '{inv.money} slots left',
