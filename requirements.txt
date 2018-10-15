@@ -7,4 +7,4 @@ mtranslate
 requests
 psutil
 bs4
-all_the_chatbots
+all_the_chatbots>=0.1.1
