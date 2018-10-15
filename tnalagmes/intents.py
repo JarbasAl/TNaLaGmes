@@ -320,6 +320,10 @@ class TNaLaGmesAdaptIntentParser(TNaLaGmesBaseIntentParser):
         }
         return self.build_intent(data, handler, validator)
 
+    def register_intent(self, name, samples=None, handler=None,
+                        ignore_defaults=False, validator=None):
+        pass
+
 
 class TNaLaGmesPadatiousIntentParser(TNaLaGmesBaseIntentParser):
     name = "padatious"
@@ -341,6 +345,10 @@ class TNaLaGmesPadatiousIntentParser(TNaLaGmesBaseIntentParser):
     def learn(self):
         # train registered intents
         self.engine.train()
+
+    def register_keyword_intent(self, name, required=None, optionals=None,
+                                handler=None, ignore_defaults=False, validator=None):
+        pass
 
     def register_intent(self, name, samples=None, handler=None,
                         ignore_defaults=False, validator=None):
