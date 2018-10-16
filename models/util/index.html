@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../../img/favicon.ico">
+  <title>util - Space Is Cool</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "util";
+    var mkdocs_page_input_path = "models/util.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="../../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href="../.." class="icon icon-home"> Space Is Cool</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../..">Home</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">tnalagmes</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../../intents/">intents</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../../engines/">engines</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../">models</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../../games/">games</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">engines</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../../engines/oregon75/">oregon75</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">models</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../objects/">objects</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../agents/">agents</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../world/">world</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1 current">
+		
+    <a class="current" href="./">util</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l2"><a href="#tnalagmesutil-technical-reference-guide">tnalagmes/util Technical Reference Guide</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l3" href="#contents">Contents</a></li>
+        
+            <li><a class="toctree-l3" href="#tnalagmesutillogpy">tnalagmes/util/log.py</a></li>
+        
+            <li><a class="toctree-l3" href="#tnalagmesutilsignalpy">tnalagmes/util/signal.py</a></li>
+        
+            <li><a class="toctree-l3" href="#tnalagmesutilphonemespy">tnalagmes/util/phonemes.py</a></li>
+        
+            <li><a class="toctree-l3" href="#tnalagmesutilnlppy">tnalagmes/util/nlp.py</a></li>
+        
+            <li><a class="toctree-l3" href="#tnalagmesutiltimepy">tnalagmes/util/time.py</a></li>
+        
+        </ul>
+    
+
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">games</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../../oregontrail_original/">oregontrail_original</a>
+                </li>
+    </ul>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../..">Space Is Cool</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>util</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="tnalagmesutil-technical-reference-guide">tnalagmes/util Technical Reference Guide</h1>
+<p>auto generated on 2018-10-16 01:51:34 </p>
+<h2 id="contents">Contents</h2>
+<ol>
+<li><a href="#tnalagmes/util/logpy">tnalagmes/util/log.py</a></li>
+<li><a href="#tnalagmes/util/signalpy">tnalagmes/util/signal.py</a></li>
+<li><a href="#tnalagmes/util/phonemespy">tnalagmes/util/phonemes.py</a></li>
+<li><a href="#tnalagmes/util/nlppy">tnalagmes/util/nlp.py</a></li>
+<li><a href="#tnalagmes/util/timepy">tnalagmes/util/time.py</a></li>
+</ol>
+<h2 id="tnalagmesutillogpy">tnalagmes/util/log.py</h2>
+<p><a href="tnalagmes/util/log.py">source file</a></p>
+<h3 id="getlogger">getLogger</h3>
+<p>getLogger(name="TNALAGMES")</p>
+<pre><code>Depreciated. Use LOG instead
+</code></pre>
+
+<h3 id="_make_log_method">_make_log_method</h3>
+<p>_make_log_method(fn)</p>
+<h2 id="tnalagmesutilsignalpy">tnalagmes/util/signal.py</h2>
+<p><a href="tnalagmes/util/signal.py">source file</a></p>
+<h3 id="get_ipc_directory">get_ipc_directory</h3>
+<p>get_ipc_directory(domain=None, dir=None)</p>
+<pre><code>Get the directory used for Inter Process Communication
+
+    Files in this folder can be accessed by different processes on the
+    machine.  Useful for communication.  This is often a small RAM disk.
+
+    Args:
+        domain (str): The IPC domain.  Basically a subdirectory to prevent
+            overlapping signal filenames.
+
+    Returns:
+        str: a path to the IPC directory
+
+</code></pre>
+
+<h3 id="ensure_directory_exists">ensure_directory_exists</h3>
+<p>ensure_directory_exists(directory, domain=None)</p>
+<pre><code> Create a directory and give access rights to all
+
+    Args:
+        domain (str): The IPC domain.  Basically a subdirectory to prevent
+            overlapping signal filenames.
+
+    Returns:
+        str: a path to the directory
+
+</code></pre>
+
+<h3 id="create_file">create_file</h3>
+<p>create_file(filename)</p>
+<pre><code> Create the file filename and create any directories needed
+
+        Args:
+            filename: Path to the file to be created
+
+</code></pre>
+
+<h3 id="create_signal">create_signal</h3>
+<p>create_signal(signal_name)</p>
+<pre><code>Create a named signal
+
+    Args:
+        signal_name (str): The signal's name.  Must only contain characters
+            valid in filenames.
+
+</code></pre>
+
+<h3 id="check_for_signal">check_for_signal</h3>
+<p>check_for_signal(signal_name, sec_lifetime=0)</p>
+<pre><code>See if a named signal exists
+
+    Args:
+        signal_name (str): The signal's name.  Must only contain characters
+            valid in filenames.
+        sec_lifetime (int, optional): How many seconds the signal should
+            remain valid.  If 0 or not specified, it is a single-use signal.
+            If -1, it never expires.
+
+    Returns:
+        bool: True if the signal is defined, False otherwise
+
+</code></pre>
+
+<h2 id="tnalagmesutilphonemespy">tnalagmes/util/phonemes.py</h2>
+<p><a href="tnalagmes/util/phonemes.py">source file</a></p>
+<h3 id="guess_phonemes">guess_phonemes</h3>
+<p>guess_phonemes(word, lang="en-us")</p>
+<h3 id="get_phonemes">get_phonemes</h3>
+<p>get_phonemes(name, lang="en-us")</p>
+<h2 id="tnalagmesutilnlppy">tnalagmes/util/nlp.py</h2>
+<p><a href="tnalagmes/util/nlp.py">source file</a></p>
+<h3 id="ner">NER</h3>
+<p>NER(text)</p>
+<h3 id="replace_coreferences">replace_coreferences</h3>
+<p>replace_coreferences(text)</p>
+<h3 id="textual_entailment">textual_entailment</h3>
+<p>textual_entailment(premise, hypothesis)</p>
+<h2 id="tnalagmesutiltimepy">tnalagmes/util/time.py</h2>
+<p><a href="tnalagmes/util/time.py">source file</a></p>
+<h3 id="default_timezone">default_timezone</h3>
+<p>default_timezone()</p>
+<pre><code> Get the default timezone
+
+    Based on user location settings location.timezone.code or
+    the default system value if no setting exists.
+
+    Returns:
+        (datetime.tzinfo): Definition of the default timezone
+
+</code></pre>
+
+<h3 id="now_utc">now_utc</h3>
+<p>now_utc()</p>
+<pre><code> Retrieve the current time in UTC
+
+    Returns:
+        (datetime): The current time in Universal Time, aka GMT
+
+</code></pre>
+
+<h3 id="now_local">now_local</h3>
+<p>now_local(tz=None)</p>
+<pre><code> Retrieve the current time
+
+    Args:
+        tz (datetime.tzinfo, optional): Timezone, default to user's settings
+
+    Returns:
+        (datetime): The current time
+
+</code></pre>
+
+<h3 id="to_utc">to_utc</h3>
+<p>to_utc(dt)</p>
+<pre><code> Convert a datetime with timezone info to a UTC datetime
+
+    Args:
+        dt (datetime): A datetime (presumably in some local zone)
+    Returns:
+        (datetime): time converted to UTC
+
+</code></pre>
+
+<h3 id="to_local">to_local</h3>
+<p>to_local(dt)</p>
+<pre><code> Convert a datetime to the user's local timezone
+
+    Args:
+        dt (datetime): A datetime (if no timezone, defaults to UTC)
+    Returns:
+        (datetime): time converted to the local timezone
+
+</code></pre>
+
+<h3 id="get_timedelta">get_timedelta</h3>
+<p>get_timedelta(dt, anchor=None)</p>
+<pre><code> Get a datetime object or a int() Epoch timestamp and return a timedelta
+</code></pre>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../../oregontrail_original/" class="btn btn-neutral float-right" title="oregontrail_original">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../world/" class="btn btn-neutral" title="world"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../world/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../../oregontrail_original/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '../..';</script>
+    <script src="../../js/theme.js" defer></script>
+      <script src="../../search/main.js" defer></script>
+
+</body>
+</html>
