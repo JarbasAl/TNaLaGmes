@@ -8,7 +8,7 @@
   
   
   <link rel="shortcut icon" href="../img/favicon.ico">
-  <title>agents - tnalagmes</title>
+  <title>engines - tnalagmes</title>
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   <link rel="stylesheet" href="../css/theme.css" type="text/css" />
@@ -17,8 +17,8 @@
   
   <script>
     // Current page data
-    var mkdocs_page_name = "agents";
-    var mkdocs_page_input_path = "tnalagmes.models.agents.md";
+    var mkdocs_page_name = "engines";
+    var mkdocs_page_input_path = "tnalagmes.engines.md";
     var mkdocs_page_url = null;
   </script>
   
@@ -140,25 +140,9 @@
                     
     <a class="" href="../tnalagmes.models/">models</a>
                 </li>
-                <li class=" current">
+                <li class="">
                     
-    <a class="current" href="./">agents</a>
-    <ul class="subnav">
-            
-    <li class="toctree-l3"><a href="#module-tnalagmesmodelsagents">Module tnalagmes.models.agents</a></li>
-    
-        <ul>
-        
-            <li><a class="toctree-l4" href="#agent">Agent</a></li>
-        
-            <li><a class="toctree-l4" href="#chatagent">ChatAgent</a></li>
-        
-            <li><a class="toctree-l4" href="#npc">NPC</a></li>
-        
-        </ul>
-    
-
-    </ul>
+    <a class="" href="../tnalagmes.models.agents/">agents</a>
                 </li>
                 <li class="">
                     
@@ -207,9 +191,63 @@
 		
     <span class="caption-text">engines</span>
     <ul class="subnav">
-                <li class="">
+                <li class=" current">
                     
-    <a class="" href="../tnalagmes.engines/">engines</a>
+    <a class="current" href="./">engines</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l3"><a href="#module-tnalagmesengines">Module tnalagmes.engines</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l4" href="#event">Event</a></li>
+        
+            <li><a class="toctree-l4" href="#tnalagmesengine">TNaLaGmesEngine</a></li>
+        
+        </ul>
+    
+
+    <li class="toctree-l3"><a href="#module-tnalagmesenginesintentworld">Module tnalagmes.engines.intentworld</a></li>
+    
+
+    <li class="toctree-l3"><a href="#module-tnalagmesenginesoregon">Module tnalagmes.engines.oregon</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l4" href="#oregonengine">OregonEngine</a></li>
+        
+            <li><a class="toctree-l4" href="#simpleinventory">SimpleInventory</a></li>
+        
+            <li><a class="toctree-l4" href="#turnstate">TurnState</a></li>
+        
+        </ul>
+    
+
+    <li class="toctree-l3"><a href="#module-tnalagmesenginesoregon75">Module tnalagmes.engines.oregon75</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l4" href="#oregon75engine">Oregon75Engine</a></li>
+        
+        </ul>
+    
+
+    <li class="toctree-l3"><a href="#module-tnalagmesenginesoregon78">Module tnalagmes.engines.oregon78</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l4" href="#oregon78engine">Oregon78Engine</a></li>
+        
+        </ul>
+    
+
+    <li class="toctree-l3"><a href="#module-tnalagmesenginestextadventurer">Module tnalagmes.engines.textadventurer</a></li>
+    
+
+    <li class="toctree-l3"><a href="#module-tnalagmesenginestextwarrior">Module tnalagmes.engines.textwarrior</a></li>
+    
+
+    </ul>
                 </li>
                 <li class="">
                     
@@ -346,11 +384,11 @@
     
       
         
-          <li>models &raquo;</li>
+          <li>engines &raquo;</li>
         
       
     
-    <li>agents</li>
+    <li>engines</li>
     <li class="wy-breadcrumbs-aside">
       
     </li>
@@ -360,24 +398,164 @@
           <div role="main">
             <div class="section">
               
-                <h2 id="module-tnalagmesmodelsagents">Module tnalagmes.models.agents</h2>
-<h3 id="agent">Agent</h3>
+                <h2 id="module-tnalagmesengines">Module tnalagmes.engines</h2>
+<h3 id="event">Event</h3>
 <p>None</p>
-<h4 id="handle95hello">handle_hello</h4>
+<h4 id="add95field">add_field</h4>
 <pre><code>
-def handle_hello(self, intent)
+def add_field(self, name, data=None)
 
 </code></pre>
 
-<h4 id="interact95with">interact_with</h4>
+<h4 id="bind95handler">bind_handler</h4>
 <pre><code>
-def interact_with(self, construct)
+def bind_handler(self, event_handler=None)
 
 </code></pre>
 
-<h4 id="look95to">look_to</h4>
+<h4 id="from95json">from_json</h4>
 <pre><code>
-def look_to(self, direction)
+def from_json(self, data)
+
+</code></pre>
+
+<h4 id="trigger">trigger</h4>
+<pre><code>
+def trigger(self, data=None)
+
+</code></pre>
+
+<h3 id="tnalagmesengine">TNaLaGmesEngine</h3>
+<p>None</p>
+<h4 id="ask95world">ask_world</h4>
+<pre><code>
+def ask_world(self, utterance)
+
+</code></pre>
+
+<h4 id="export95game95data">export_game_data</h4>
+<pre><code>
+def export_game_data(path=None)
+
+</code></pre>
+
+<h4 id="get95entity">get_entity</h4>
+<pre><code>
+def get_entity(text)
+
+</code></pre>
+
+<h4 id="handle95export">handle_export</h4>
+<pre><code>
+def handle_export(self, intent)
+
+</code></pre>
+
+<h4 id="handle95import">handle_import</h4>
+<pre><code>
+def handle_import(self, intent)
+
+</code></pre>
+
+<h4 id="handle95load">handle_load</h4>
+<pre><code>
+def handle_load(self, intent)
+
+</code></pre>
+
+<h4 id="handle95quit">handle_quit</h4>
+<pre><code>
+def handle_quit(self, intent)
+
+</code></pre>
+
+<h4 id="handle95save">handle_save</h4>
+<pre><code>
+def handle_save(self, intent)
+
+</code></pre>
+
+<h4 id="import95game95data">import_game_data</h4>
+<pre><code>
+def import_game_data(path=None)
+
+</code></pre>
+
+<h4 id="intro">intro</h4>
+<pre><code>
+def intro(self)
+
+</code></pre>
+
+<h4 id="load">load</h4>
+<pre><code>
+def load(self, path=None)
+
+</code></pre>
+
+<h4 id="manual95fix95parse">manual_fix_parse</h4>
+<pre><code>
+def manual_fix_parse(self, text)
+
+</code></pre>
+
+<h4 id="on95chance95encounter">on_chance_encounter</h4>
+<pre><code>
+def on_chance_encounter(self)
+
+</code></pre>
+
+<h4 id="on95damage">on_damage</h4>
+<pre><code>
+def on_damage(self)
+
+</code></pre>
+
+<h4 id="on95difficulty95modifier">on_difficulty_modifier</h4>
+<pre><code>
+def on_difficulty_modifier(self)
+
+</code></pre>
+
+<h4 id="on95easy95difficulty">on_easy_difficulty</h4>
+<pre><code>
+def on_easy_difficulty(self)
+
+</code></pre>
+
+<h4 id="on95game95over">on_game_over</h4>
+<pre><code>
+def on_game_over(self)
+
+</code></pre>
+
+<h4 id="on95hard95difficulty">on_hard_difficulty</h4>
+<pre><code>
+def on_hard_difficulty(self)
+
+</code></pre>
+
+<h4 id="on95lose">on_lose</h4>
+<pre><code>
+def on_lose(self)
+
+</code></pre>
+
+<h4 id="on95medium95difficulty">on_medium_difficulty</h4>
+<pre><code>
+def on_medium_difficulty(self)
+
+</code></pre>
+
+<h4 id="on95random95event">on_random_event</h4>
+<pre><code>
+def on_random_event(self)
+
+</code></pre>
+
+<h4 id="on95shop">on_shop</h4>
+<pre><code>
+def on_shop(self)
 
 </code></pre>
 
@@ -393,41 +571,276 @@ def on_turn(self)
 
 </code></pre>
 
-<h4 id="register95default95intents">register_default_intents</h4>
+<h4 id="on95win">on_win</h4>
 <pre><code>
-def register_default_intents(self)
+def on_win(self)
 
 </code></pre>
 
-<h4 id="take95damage">take_damage</h4>
+<h4 id="parse95command">parse_command</h4>
 <pre><code>
-def take_damage(self, dmg)
+def parse_command(self, utterance)
 
 </code></pre>
 
-<h3 id="chatagent">ChatAgent</h3>
-<p>None</p>
-<h4 id="create95chatbot">create_chatbot</h4>
+<p>chooses and executes best intent returning result </p>
+<h4 id="pprint95data">pprint_data</h4>
 <pre><code>
-def create_chatbot(name=None)
+def pprint_data(self)
 
 </code></pre>
 
-<h4 id="handle95hello_1">handle_hello</h4>
+<h4 id="quit">quit</h4>
 <pre><code>
-def handle_hello(self, intent)
+def quit(self)
 
 </code></pre>
 
-<h4 id="interact95with_1">interact_with</h4>
+<h4 id="register95core95intents">register_core_intents</h4>
 <pre><code>
-def interact_with(self, construct)
+def register_core_intents(self)
 
 </code></pre>
 
-<h4 id="look95to_1">look_to</h4>
+<h4 id="register95event">register_event</h4>
 <pre><code>
-def look_to(self, direction)
+def register_event(self, event_object)
+
+</code></pre>
+
+<h4 id="register95events">register_events</h4>
+<pre><code>
+def register_events(self)
+
+</code></pre>
+
+<p>load default events or from jsom
+:param from_json:
+:return:</p>
+<h4 id="register95from95json">register_from_json</h4>
+<pre><code>
+def register_from_json(self, dictionary, event_handler=None)
+
+</code></pre>
+
+<h4 id="run">run</h4>
+<pre><code>
+def run(self)
+
+</code></pre>
+
+<h4 id="save">save</h4>
+<pre><code>
+def save(self, path=None)
+
+</code></pre>
+
+<h4 id="submit95command">submit_command</h4>
+<pre><code>
+def submit_command(self, text='')
+
+</code></pre>
+
+<h2 id="module-tnalagmesenginesintentworld">Module tnalagmes.engines.intentworld</h2>
+<h2 id="module-tnalagmesenginesoregon">Module tnalagmes.engines.oregon</h2>
+<h3 id="oregonengine">OregonEngine</h3>
+<p>so called because logic is based on oregon trail</p>
+<h3 id="simpleinventory">SimpleInventory</h3>
+<p>what do you have
+how much money do you have
+how much are you worth</p>
+<h4 id="get95entity_1">get_entity</h4>
+<pre><code>
+def get_entity(text)
+
+</code></pre>
+
+<h4 id="normalize95negative95values">normalize_negative_values</h4>
+<pre><code>
+def normalize_negative_values(self)
+
+</code></pre>
+
+<h4 id="spend">spend</h4>
+<pre><code>
+def spend(self, cost)
+
+</code></pre>
+
+<h3 id="turnstate">TurnState</h3>
+<p>am i injured
+am i eating/poorly/moderately/well
+suffering illness</p>
+<h4 id="eating95moderately">eating_moderately</h4>
+<pre><code>
+def eating_moderately(self)
+
+</code></pre>
+
+<h4 id="eating95poorly">eating_poorly</h4>
+<pre><code>
+def eating_poorly(self)
+
+</code></pre>
+
+<h4 id="eating95well">eating_well</h4>
+<pre><code>
+def eating_well(self)
+
+</code></pre>
+
+<h2 id="module-tnalagmesenginesoregon75">Module tnalagmes.engines.oregon75</h2>
+<h3 id="oregon75engine">Oregon75Engine</h3>
+<p>so called because logic is ported from 1975 basic version of oregon trail</p>
+<h4 id="animal95attack">animal_attack</h4>
+<pre><code>
+def animal_attack(self)
+
+</code></pre>
+
+<h4 id="bad95terrain">bad_terrain</h4>
+<pre><code>
+def bad_terrain(self)
+
+</code></pre>
+
+<h4 id="cold">cold</h4>
+<pre><code>
+def cold(self)
+
+</code></pre>
+
+<h4 id="companion95injury">companion_injury</h4>
+<pre><code>
+def companion_injury(self)
+
+</code></pre>
+
+<h4 id="enemy95attack">enemy_attack</h4>
+<pre><code>
+def enemy_attack(self)
+
+</code></pre>
+
+<h4 id="find95supplies">find_supplies</h4>
+<pre><code>
+def find_supplies(self)
+
+</code></pre>
+
+<h4 id="fuel95damage">fuel_damage</h4>
+<pre><code>
+def fuel_damage(self)
+
+</code></pre>
+
+<h4 id="get95poisoned">get_poisoned</h4>
+<pre><code>
+def get_poisoned(self)
+
+</code></pre>
+
+<h4 id="handle95no">handle_no</h4>
+<pre><code>
+def handle_no(self, intent)
+
+</code></pre>
+
+<h4 id="handle95yes">handle_yes</h4>
+<pre><code>
+def handle_yes(self, intent)
+
+</code></pre>
+
+<p>NOTES:</p>
+<p>engine</p>
+<h4 id="heavy95fog">heavy_fog</h4>
+<pre><code>
+def heavy_fog(self)
+
+</code></pre>
+
+<h4 id="illness">illness</h4>
+<pre><code>
+def illness(self)
+
+</code></pre>
+
+<h4 id="lose95companion">lose_companion</h4>
+<pre><code>
+def lose_companion(self)
+
+</code></pre>
+
+<h4 id="manual95fix95parse_1">manual_fix_parse</h4>
+<pre><code>
+def manual_fix_parse(self, text)
+
+</code></pre>
+
+<h4 id="on95chance95encounter_1">on_chance_encounter</h4>
+<pre><code>
+def on_chance_encounter(self)
+
+</code></pre>
+
+<h4 id="on95damage_1">on_damage</h4>
+<pre><code>
+def on_damage(self)
+
+</code></pre>
+
+<h4 id="on95difficulty95damage">on_difficulty_damage</h4>
+<pre><code>
+def on_difficulty_damage(self)
+
+</code></pre>
+
+<h4 id="on95easy95difficulty_1">on_easy_difficulty</h4>
+<pre><code>
+def on_easy_difficulty(self)
+
+</code></pre>
+
+<h4 id="on95explore">on_explore</h4>
+<pre><code>
+def on_explore(self)
+
+</code></pre>
+
+<h4 id="on95hard95difficulty_1">on_hard_difficulty</h4>
+<pre><code>
+def on_hard_difficulty(self)
+
+</code></pre>
+
+<h4 id="on95heal">on_heal</h4>
+<pre><code>
+def on_heal(self)
+
+</code></pre>
+
+<h4 id="on95lose_1">on_lose</h4>
+<pre><code>
+def on_lose(self)
+
+</code></pre>
+
+<h4 id="on95maintenance">on_maintenance</h4>
+<pre><code>
+def on_maintenance(self)
+
+</code></pre>
+
+<h4 id="on95medium95difficulty_1">on_medium_difficulty</h4>
+<pre><code>
+def on_medium_difficulty(self)
+
+</code></pre>
+
+<h4 id="on95shop_1">on_shop</h4>
+<pre><code>
+def on_shop(self)
 
 </code></pre>
 
@@ -443,70 +856,72 @@ def on_turn(self)
 
 </code></pre>
 
-<h4 id="register95default95intents_1">register_default_intents</h4>
+<h4 id="on95win_1">on_win</h4>
+<pre><code>
+def on_win(self)
+
+</code></pre>
+
+<p>NOTES:</p>
+<p>turn events</p>
+<h4 id="rain">rain</h4>
+<pre><code>
+def rain(self)
+
+</code></pre>
+
+<p>NOTES:</p>
+<p>random events</p>
+<h4 id="register95default95intents">register_default_intents</h4>
 <pre><code>
 def register_default_intents(self)
 
 </code></pre>
 
-<h4 id="take95damage_1">take_damage</h4>
+<h4 id="register95events_1">register_events</h4>
 <pre><code>
-def take_damage(self, dmg)
+def register_events(self)
 
 </code></pre>
 
-<h3 id="npc">NPC</h3>
-<p>hello world
-what is your name
-attack
-take damage
-heal
-spend mana
-cast spell</p>
-<h4 id="attack">attack</h4>
+<p>load default events or from jsom
+:param from_json:
+:return:</p>
+<h4 id="shelter95damage">shelter_damage</h4>
 <pre><code>
-def attack(self)
+def shelter_damage(self)
 
 </code></pre>
 
-<h4 id="cast95spell">cast_spell</h4>
+<h4 id="shelter95fire">shelter_fire</h4>
 <pre><code>
-def cast_spell(self)
+def shelter_fire(self)
 
 </code></pre>
 
-<h4 id="heal">heal</h4>
+<h4 id="storm">storm</h4>
 <pre><code>
-def heal(self, dmg)
+def storm(self)
 
 </code></pre>
 
-<h4 id="register95core95intents">register_core_intents</h4>
+<h4 id="supply95damage">supply_damage</h4>
 <pre><code>
-def register_core_intents(self)
+def supply_damage(self)
 
 </code></pre>
 
-<p>hello world
-take damage
-spend mana</p>
-<h4 id="register95default95intents_2">register_default_intents</h4>
+<h4 id="vehicle95damage">vehicle_damage</h4>
 <pre><code>
-def register_default_intents(self)
+def vehicle_damage(self)
 
 </code></pre>
 
-<h4 id="spend95mana">spend_mana</h4>
-<pre><code>
-def spend_mana(self, cost)
-
-</code></pre>
-
-<h4 id="take95damage_2">take_damage</h4>
-<pre><code>
-def take_damage(self, dmg)
-
-</code></pre>
+<h2 id="module-tnalagmesenginesoregon78">Module tnalagmes.engines.oregon78</h2>
+<h3 id="oregon78engine">Oregon78Engine</h3>
+<p>so called because logic is ported from 1978 basic version of oregon trail</p>
+<h2 id="module-tnalagmesenginestextadventurer">Module tnalagmes.engines.textadventurer</h2>
+<h2 id="module-tnalagmesenginestextwarrior">Module tnalagmes.engines.textwarrior</h2>
               
             </div>
           </div>
@@ -514,10 +929,10 @@ def take_damage(self, dmg)
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../tnalagmes.models.battle/" class="btn btn-neutral float-right" title="battle">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../tnalagmes.engines.textadventurer/" class="btn btn-neutral float-right" title="textadventurer">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
-        <a href="../tnalagmes.models/" class="btn btn-neutral" title="models"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../tnalagmes.constructs/" class="btn btn-neutral" title="constructs"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -543,10 +958,10 @@ def take_damage(self, dmg)
     <span class="rst-current-version" data-toggle="rst-current-version">
       
       
-        <span><a href="../tnalagmes.models/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+        <span><a href="../tnalagmes.constructs/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
       
-        <span style="margin-left: 15px"><a href="../tnalagmes.models.battle/" style="color: #fcfcfc">Next &raquo;</a></span>
+        <span style="margin-left: 15px"><a href="../tnalagmes.engines.textadventurer/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>

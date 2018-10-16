@@ -8,7 +8,7 @@
   
   
   <link rel="shortcut icon" href="../img/favicon.ico">
-  <title>signal - tnalagmes</title>
+  <title>util - tnalagmes</title>
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   <link rel="stylesheet" href="../css/theme.css" type="text/css" />
@@ -17,8 +17,8 @@
   
   <script>
     // Current page data
-    var mkdocs_page_name = "signal";
-    var mkdocs_page_input_path = "tnalagmes.util.signal.md";
+    var mkdocs_page_name = "util";
+    var mkdocs_page_input_path = "tnalagmes.util.md";
     var mkdocs_page_url = null;
   </script>
   
@@ -258,23 +258,83 @@
 		
     <span class="caption-text">util</span>
     <ul class="subnav">
-                <li class="">
-                    
-    <a class="" href="../tnalagmes.util/">util</a>
-                </li>
-                <li class="">
-                    
-    <a class="" href="../tnalagmes.util.nlp/">nlp</a>
-                </li>
-                <li class="">
-                    
-    <a class="" href="../tnalagmes.util.phonemes/">phonemes</a>
-                </li>
                 <li class=" current">
                     
-    <a class="current" href="./">signal</a>
+    <a class="current" href="./">util</a>
     <ul class="subnav">
             
+    <li class="toctree-l3"><a href="#module-tnalagmesutil">Module tnalagmes.util</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l4" href="#camel95case95split">camel_case_split</a></li>
+        
+            <li><a class="toctree-l4" href="#create95daemon">create_daemon</a></li>
+        
+            <li><a class="toctree-l4" href="#curate95cache">curate_cache</a></li>
+        
+            <li><a class="toctree-l4" href="#get95arch">get_arch</a></li>
+        
+            <li><a class="toctree-l4" href="#get95cache95directory">get_cache_directory</a></li>
+        
+            <li><a class="toctree-l4" href="#get95http">get_http</a></li>
+        
+            <li><a class="toctree-l4" href="#play95mp3">play_mp3</a></li>
+        
+            <li><a class="toctree-l4" href="#play95ogg">play_ogg</a></li>
+        
+            <li><a class="toctree-l4" href="#play95wav">play_wav</a></li>
+        
+            <li><a class="toctree-l4" href="#read95dict">read_dict</a></li>
+        
+            <li><a class="toctree-l4" href="#read95stripped95lines">read_stripped_lines</a></li>
+        
+            <li><a class="toctree-l4" href="#record">record</a></li>
+        
+            <li><a class="toctree-l4" href="#remove95last95slash">remove_last_slash</a></li>
+        
+            <li><a class="toctree-l4" href="#reset95sigint95handler">reset_sigint_handler</a></li>
+        
+            <li><a class="toctree-l4" href="#resolve95resource95file">resolve_resource_file</a></li>
+        
+            <li><a class="toctree-l4" href="#wait95for95exit95signal">wait_for_exit_signal</a></li>
+        
+        </ul>
+    
+
+    <li class="toctree-l3"><a href="#module-tnalagmesutillog">Module tnalagmes.util.log</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l4" href="#log">LOG</a></li>
+        
+        </ul>
+    
+
+    <li class="toctree-l3"><a href="#module-tnalagmesutilnlp">Module tnalagmes.util.nlp</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l4" href="#ner">NER</a></li>
+        
+            <li><a class="toctree-l4" href="#replace95coreferences">replace_coreferences</a></li>
+        
+            <li><a class="toctree-l4" href="#textual95entailment">textual_entailment</a></li>
+        
+        </ul>
+    
+
+    <li class="toctree-l3"><a href="#module-tnalagmesutilphonemes">Module tnalagmes.util.phonemes</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l4" href="#get95phonemes">get_phonemes</a></li>
+        
+            <li><a class="toctree-l4" href="#guess95phonemes">guess_phonemes</a></li>
+        
+        </ul>
+    
+
     <li class="toctree-l3"><a href="#module-tnalagmesutilsignal">Module tnalagmes.util.signal</a></li>
     
         <ul>
@@ -292,7 +352,38 @@
         </ul>
     
 
+    <li class="toctree-l3"><a href="#module-tnalagmesutiltime">Module tnalagmes.util.time</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l4" href="#default95timezone">default_timezone</a></li>
+        
+            <li><a class="toctree-l4" href="#get95timedelta">get_timedelta</a></li>
+        
+            <li><a class="toctree-l4" href="#now95local">now_local</a></li>
+        
+            <li><a class="toctree-l4" href="#now95utc">now_utc</a></li>
+        
+            <li><a class="toctree-l4" href="#to95local">to_local</a></li>
+        
+            <li><a class="toctree-l4" href="#to95utc">to_utc</a></li>
+        
+        </ul>
+    
+
     </ul>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../tnalagmes.util.nlp/">nlp</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../tnalagmes.util.phonemes/">phonemes</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../tnalagmes.util.signal/">signal</a>
                 </li>
                 <li class="">
                     
@@ -354,7 +445,7 @@
         
       
     
-    <li>signal</li>
+    <li>util</li>
     <li class="wy-breadcrumbs-aside">
       
     </li>
@@ -364,7 +455,160 @@
           <div role="main">
             <div class="section">
               
-                <h2 id="module-tnalagmesutilsignal">Module tnalagmes.util.signal</h2>
+                <h2 id="module-tnalagmesutil">Module tnalagmes.util</h2>
+<h3 id="camel95case95split">camel_case_split</h3>
+<p><code>def camel_case_split(identifier:str) -&gt; str</code></p>
+<p>Split camel case string </p>
+<h3 id="create95daemon">create_daemon</h3>
+<p><code>def create_daemon(target, args=(), kwargs=None)</code></p>
+<p>Helper to quickly create and start a thread with daemon = True </p>
+<h3 id="curate95cache">curate_cache</h3>
+<p><code>def curate_cache(directory, min_free_percent=5.0, min_free_disk=50)</code></p>
+<p>Clear out the directory if needed</p>
+<p>This assumes all the files in the directory can be deleted as freely</p>
+<p>Args:
+    directory (str): directory path that holds cached files
+    min_free_percent (float): percentage (0.0-100.0) of drive to keep free,
+                              default is 5% if not specified.
+    min_free_disk (float): minimum allowed disk space in MB, default
+                           value is 50 MB if not specified. </p>
+<h3 id="get95arch">get_arch</h3>
+<p><code>def get_arch()</code></p>
+<p>Get architecture string of system.  </p>
+<h3 id="get95cache95directory">get_cache_directory</h3>
+<p><code>def get_cache_directory(dir=None, domain=None)</code></p>
+<p>Get a directory for caching data</p>
+<p>This directory can be used to hold temporary caches of data to
+speed up performance.  This directory will likely be part of a
+small RAM disk and may be cleared at any time.  So code that
+uses these cached files must be able to fallback and regenerate
+the file.</p>
+<p>Args:
+    domain (str): The cache domain.  Basically just a subdirectory.</p>
+<p>Return:
+    str: a path to the directory where you can cache data </p>
+<h3 id="get95http">get_http</h3>
+<p><code>def get_http(uri)</code></p>
+<h3 id="play95mp3">play_mp3</h3>
+<p><code>def play_mp3(uri)</code></p>
+<h3 id="play95ogg">play_ogg</h3>
+<p><code>def play_ogg(uri)</code></p>
+<h3 id="play95wav">play_wav</h3>
+<p><code>def play_wav(uri)</code></p>
+<h3 id="read95dict">read_dict</h3>
+<p><code>def read_dict(filename, div='=')</code></p>
+<h3 id="read95stripped95lines">read_stripped_lines</h3>
+<p><code>def read_stripped_lines(filename)</code></p>
+<h3 id="record">record</h3>
+<p><code>def record(file_path, duration, rate, channels)</code></p>
+<h3 id="remove95last95slash">remove_last_slash</h3>
+<p><code>def remove_last_slash(url)</code></p>
+<h3 id="reset95sigint95handler">reset_sigint_handler</h3>
+<p><code>def reset_sigint_handler()</code></p>
+<p>Reset the sigint handler to the default. This fixes KeyboardInterrupt
+not getting raised when started via start-mycroft.sh </p>
+<h3 id="resolve95resource95file">resolve_resource_file</h3>
+<p><code>def resolve_resource_file(res_name, lang='en-us')</code></p>
+<p>Convert a resource into an absolute filename.</p>
+<p>Resource names are in the form: 'filename.ext'
+or 'path/filename.ext' or 'file name'</p>
+<p>Args:
+    res_name (str): a resource path/name </p>
+<h3 id="wait95for95exit95signal">wait_for_exit_signal</h3>
+<p><code>def wait_for_exit_signal()</code></p>
+<p>Blocks until KeyboardInterrupt is received </p>
+<h2 id="module-tnalagmesutillog">Module tnalagmes.util.log</h2>
+<h3 id="log">LOG</h3>
+<p>Custom logger class that acts like logging.Logger
+The logger name is automatically generated by the module of the caller</p>
+<p>Usage:
+    &gt;&gt;&gt; LOG.debug('My message: %s', debug_str)
+    13:12:43.673 - :<module>:1 - DEBUG - My message: hi
+    &gt;&gt;&gt; LOG('custom_name').debug('Another message')
+    13:13:10.462 - custom_name - DEBUG - Another message</p>
+<h4 id="create95logger">create_logger</h4>
+<pre><code>
+def create_logger(name)
+
+</code></pre>
+
+<h4 id="debug">debug</h4>
+<pre><code>
+def debug(*args, **kwargs)
+
+</code></pre>
+
+<p>Log 'msg % args' with severity 'DEBUG'.</p>
+<p>To pass exception information, use the keyword argument exc_info with
+a true value, e.g.</p>
+<p>logger.debug("Houston, we have a %s", "thorny problem", exc_info=1)</p>
+<h4 id="error">error</h4>
+<pre><code>
+def error(*args, **kwargs)
+
+</code></pre>
+
+<p>Log 'msg % args' with severity 'ERROR'.</p>
+<p>To pass exception information, use the keyword argument exc_info with
+a true value, e.g.</p>
+<p>logger.error("Houston, we have a %s", "major problem", exc_info=1)</p>
+<h4 id="exception">exception</h4>
+<pre><code>
+def exception(*args, **kwargs)
+
+</code></pre>
+
+<p>Convenience method for logging an ERROR with exception information.</p>
+<h4 id="info">info</h4>
+<pre><code>
+def info(*args, **kwargs)
+
+</code></pre>
+
+<p>Log 'msg % args' with severity 'INFO'.</p>
+<p>To pass exception information, use the keyword argument exc_info with
+a true value, e.g.</p>
+<p>logger.info("Houston, we have a %s", "interesting problem", exc_info=1)</p>
+<h4 id="init">init</h4>
+<pre><code>
+def init()
+
+</code></pre>
+
+<h4 id="warning">warning</h4>
+<pre><code>
+def warning(*args, **kwargs)
+
+</code></pre>
+
+<p>Log 'msg % args' with severity 'WARNING'.</p>
+<p>To pass exception information, use the keyword argument exc_info with
+a true value, e.g.</p>
+<p>logger.warning("Houston, we have a %s", "bit of a problem", exc_info=1)</p>
+<h2 id="module-tnalagmesutilnlp">Module tnalagmes.util.nlp</h2>
+<h3 id="ner">NER</h3>
+<p><code>def NER(text)</code></p>
+<h3 id="replace95coreferences">replace_coreferences</h3>
+<p><code>def replace_coreferences(text)</code></p>
+<h3 id="textual95entailment">textual_entailment</h3>
+<p><code>def textual_entailment(premise, hypothesis)</code></p>
+<p>Textual Entailment (TE) takes a pair of sentences and predicts whether the facts in the first necessarily imply the facts in the second one.
+The AllenNLP toolkit provides the following TE visualization, which can be run for any TE model you develop.
+This page demonstrates a reimplementation of the decomposable attention model (Parikh et al, 2017) ,
+which was state of the art for the SNLI benchmark (short sentences about visual scenes) in 2016.
+Rather than pre-trained Glove vectors, this model uses ELMo embeddings,
+which are completely character based and improve performance by 2%</p>
+<p>:param premise:
+:param hypotheses:
+:return: </p>
+<h2 id="module-tnalagmesutilphonemes">Module tnalagmes.util.phonemes</h2>
+<h3 id="get95phonemes">get_phonemes</h3>
+<p><code>def get_phonemes(name, lang='en-us')</code></p>
+<h3 id="guess95phonemes">guess_phonemes</h3>
+<p><code>def guess_phonemes(word, lang='en-us')</code></p>
+<p>NOTES: 
+ guessing phonemes rule-based</p>
+<h2 id="module-tnalagmesutilsignal">Module tnalagmes.util.signal</h2>
 <h3 id="check95for95signal">check_for_signal</h3>
 <p><code>def check_for_signal(signal_name, sec_lifetime=0)</code></p>
 <p>See if a named signal exists</p>
@@ -405,6 +649,41 @@ machine.  Useful for communication.  This is often a small RAM disk.</p>
         overlapping signal filenames.</p>
 <p>Returns:
     str: a path to the IPC directory </p>
+<h2 id="module-tnalagmesutiltime">Module tnalagmes.util.time</h2>
+<h3 id="default95timezone">default_timezone</h3>
+<p><code>def default_timezone()</code></p>
+<p>Get the default timezone</p>
+<p>Returns:
+    (datetime.tzinfo): Definition of the default timezone </p>
+<h3 id="get95timedelta">get_timedelta</h3>
+<p><code>def get_timedelta(dt, anchor=None)</code></p>
+<p>Get a datetime object or a int() Epoch timestamp and return a timedelta </p>
+<h3 id="now95local">now_local</h3>
+<p><code>def now_local(tz=None)</code></p>
+<p>Retrieve the current time</p>
+<p>Args:
+    tz (datetime.tzinfo, optional): Timezone, default to user's settings</p>
+<p>Returns:
+    (datetime): The current time </p>
+<h3 id="now95utc">now_utc</h3>
+<p><code>def now_utc()</code></p>
+<p>Retrieve the current time in UTC</p>
+<p>Returns:
+    (datetime): The current time in Universal Time, aka GMT </p>
+<h3 id="to95local">to_local</h3>
+<p><code>def to_local(dt)</code></p>
+<p>Convert a datetime to the user's local timezone</p>
+<p>Args:
+    dt (datetime): A datetime (if no timezone, defaults to UTC)
+Returns:
+    (datetime): time converted to the local timezone </p>
+<h3 id="to95utc">to_utc</h3>
+<p><code>def to_utc(dt)</code></p>
+<p>Convert a datetime with timezone info to a UTC datetime</p>
+<p>Args:
+    dt (datetime): A datetime (presumably in some local zone)
+Returns:
+    (datetime): time converted to UTC </p>
               
             </div>
           </div>
@@ -412,10 +691,10 @@ machine.  Useful for communication.  This is often a small RAM disk.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../tnalagmes.util.log/" class="btn btn-neutral float-right" title="log">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../tnalagmes.util.nlp/" class="btn btn-neutral float-right" title="nlp">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
-        <a href="../tnalagmes.util.phonemes/" class="btn btn-neutral" title="phonemes"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../tnalagmes.intents/" class="btn btn-neutral" title="intents"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -441,10 +720,10 @@ machine.  Useful for communication.  This is often a small RAM disk.</p>
     <span class="rst-current-version" data-toggle="rst-current-version">
       
       
-        <span><a href="../tnalagmes.util.phonemes/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+        <span><a href="../tnalagmes.intents/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
       
-        <span style="margin-left: 15px"><a href="../tnalagmes.util.log/" style="color: #fcfcfc">Next &raquo;</a></span>
+        <span style="margin-left: 15px"><a href="../tnalagmes.util.nlp/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>

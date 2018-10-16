@@ -8,7 +8,7 @@
   
   
   <link rel="shortcut icon" href="../img/favicon.ico">
-  <title>objects - tnalagmes</title>
+  <title>models - tnalagmes</title>
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   <link rel="stylesheet" href="../css/theme.css" type="text/css" />
@@ -17,8 +17,8 @@
   
   <script>
     // Current page data
-    var mkdocs_page_name = "objects";
-    var mkdocs_page_input_path = "tnalagmes.models.objects.md";
+    var mkdocs_page_name = "models";
+    var mkdocs_page_input_path = "tnalagmes.models.md";
     var mkdocs_page_url = null;
   </script>
   
@@ -136,27 +136,36 @@
 		
     <span class="caption-text">models</span>
     <ul class="subnav">
-                <li class="">
-                    
-    <a class="" href="../tnalagmes.models/">models</a>
-                </li>
-                <li class="">
-                    
-    <a class="" href="../tnalagmes.models.agents/">agents</a>
-                </li>
-                <li class="">
-                    
-    <a class="" href="../tnalagmes.models.battle/">battle</a>
-                </li>
-                <li class="">
-                    
-    <a class="" href="../tnalagmes.models.world/">world</a>
-                </li>
                 <li class=" current">
                     
-    <a class="current" href="./">objects</a>
+    <a class="current" href="./">models</a>
     <ul class="subnav">
             
+    <li class="toctree-l3"><a href="#module-tnalagmesmodels">Module tnalagmes.models</a></li>
+    
+
+    <li class="toctree-l3"><a href="#module-tnalagmesmodelsagents">Module tnalagmes.models.agents</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l4" href="#agent">Agent</a></li>
+        
+            <li><a class="toctree-l4" href="#chatagent">ChatAgent</a></li>
+        
+            <li><a class="toctree-l4" href="#npc">NPC</a></li>
+        
+        </ul>
+    
+
+    <li class="toctree-l3"><a href="#module-tnalagmesmodelsbattle">Module tnalagmes.models.battle</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l4" href="#ability">Ability</a></li>
+        
+        </ul>
+    
+
     <li class="toctree-l3"><a href="#module-tnalagmesmodelsobjects">Module tnalagmes.models.objects</a></li>
     
         <ul>
@@ -172,7 +181,36 @@
         </ul>
     
 
+    <li class="toctree-l3"><a href="#module-tnalagmesmodelsworld">Module tnalagmes.models.world</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l4" href="#physicsengine">PhysicsEngine</a></li>
+        
+            <li><a class="toctree-l4" href="#scene">Scene</a></li>
+        
+            <li><a class="toctree-l4" href="#world">World</a></li>
+        
+        </ul>
+    
+
     </ul>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../tnalagmes.models.agents/">agents</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../tnalagmes.models.battle/">battle</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../tnalagmes.models.world/">world</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../tnalagmes.models.objects/">objects</a>
                 </li>
     </ul>
 	    </li>
@@ -352,7 +390,7 @@
         
       
     
-    <li>objects</li>
+    <li>models</li>
     <li class="wy-breadcrumbs-aside">
       
     </li>
@@ -362,7 +400,179 @@
           <div role="main">
             <div class="section">
               
-                <h2 id="module-tnalagmesmodelsobjects">Module tnalagmes.models.objects</h2>
+                <h2 id="module-tnalagmesmodels">Module tnalagmes.models</h2>
+<h2 id="module-tnalagmesmodelsagents">Module tnalagmes.models.agents</h2>
+<h3 id="agent">Agent</h3>
+<p>None</p>
+<h4 id="handle95hello">handle_hello</h4>
+<pre><code>
+def handle_hello(self, intent)
+
+</code></pre>
+
+<h4 id="interact95with">interact_with</h4>
+<pre><code>
+def interact_with(self, construct)
+
+</code></pre>
+
+<h4 id="look95to">look_to</h4>
+<pre><code>
+def look_to(self, direction)
+
+</code></pre>
+
+<h4 id="on95start">on_start</h4>
+<pre><code>
+def on_start(self)
+
+</code></pre>
+
+<h4 id="on95turn">on_turn</h4>
+<pre><code>
+def on_turn(self)
+
+</code></pre>
+
+<h4 id="register95default95intents">register_default_intents</h4>
+<pre><code>
+def register_default_intents(self)
+
+</code></pre>
+
+<h4 id="take95damage">take_damage</h4>
+<pre><code>
+def take_damage(self, dmg)
+
+</code></pre>
+
+<h3 id="chatagent">ChatAgent</h3>
+<p>None</p>
+<h4 id="create95chatbot">create_chatbot</h4>
+<pre><code>
+def create_chatbot(name=None)
+
+</code></pre>
+
+<h4 id="handle95hello_1">handle_hello</h4>
+<pre><code>
+def handle_hello(self, intent)
+
+</code></pre>
+
+<h4 id="interact95with_1">interact_with</h4>
+<pre><code>
+def interact_with(self, construct)
+
+</code></pre>
+
+<h4 id="look95to_1">look_to</h4>
+<pre><code>
+def look_to(self, direction)
+
+</code></pre>
+
+<h4 id="on95start_1">on_start</h4>
+<pre><code>
+def on_start(self)
+
+</code></pre>
+
+<h4 id="on95turn_1">on_turn</h4>
+<pre><code>
+def on_turn(self)
+
+</code></pre>
+
+<h4 id="register95default95intents_1">register_default_intents</h4>
+<pre><code>
+def register_default_intents(self)
+
+</code></pre>
+
+<h4 id="take95damage_1">take_damage</h4>
+<pre><code>
+def take_damage(self, dmg)
+
+</code></pre>
+
+<h3 id="npc">NPC</h3>
+<p>hello world
+what is your name
+attack
+take damage
+heal
+spend mana
+cast spell</p>
+<h4 id="attack">attack</h4>
+<pre><code>
+def attack(self)
+
+</code></pre>
+
+<h4 id="cast95spell">cast_spell</h4>
+<pre><code>
+def cast_spell(self)
+
+</code></pre>
+
+<h4 id="heal">heal</h4>
+<pre><code>
+def heal(self, dmg)
+
+</code></pre>
+
+<h4 id="register95core95intents">register_core_intents</h4>
+<pre><code>
+def register_core_intents(self)
+
+</code></pre>
+
+<p>hello world
+take damage
+spend mana</p>
+<h4 id="register95default95intents_2">register_default_intents</h4>
+<pre><code>
+def register_default_intents(self)
+
+</code></pre>
+
+<h4 id="spend95mana">spend_mana</h4>
+<pre><code>
+def spend_mana(self, cost)
+
+</code></pre>
+
+<h4 id="take95damage_2">take_damage</h4>
+<pre><code>
+def take_damage(self, dmg)
+
+</code></pre>
+
+<h2 id="module-tnalagmesmodelsbattle">Module tnalagmes.models.battle</h2>
+<h3 id="ability">Ability</h3>
+<p>what is your _name
+what is your cost
+what is your damage
+what are you
+generate some damage</p>
+<h4 id="generate95damage">generate_damage</h4>
+<pre><code>
+def generate_damage(self)
+
+</code></pre>
+
+<h4 id="register95core95intents_1">register_core_intents</h4>
+<pre><code>
+def register_core_intents(self)
+
+</code></pre>
+
+<p>what is your _name
+what is your cost
+what is your damage
+generate some damage</p>
+<h2 id="module-tnalagmesmodelsobjects">Module tnalagmes.models.objects</h2>
 <h3 id="calendar">Calendar</h3>
 <p>Calendar Object</p>
 <p>"What day/date/week/weekday/month/year is it?"</p>
@@ -485,7 +695,7 @@ def handle_year(self, intent)
 
 </code></pre>
 
-<h4 id="register95core95intents">register_core_intents</h4>
+<h4 id="register95core95intents_2">register_core_intents</h4>
 <pre><code>
 def register_core_intents(self)
 
@@ -518,7 +728,7 @@ def print_warnings(self)
 
 </code></pre>
 
-<h4 id="register95core95intents_1">register_core_intents</h4>
+<h4 id="register95core95intents_3">register_core_intents</h4>
 <pre><code>
 def register_core_intents(self)
 
@@ -543,7 +753,7 @@ def add(self, value)
 
 </code></pre>
 
-<h4 id="register95core95intents_2">register_core_intents</h4>
+<h4 id="register95core95intents_4">register_core_intents</h4>
 <pre><code>
 def register_core_intents(self)
 
@@ -622,7 +832,7 @@ def random_advance(self, seed=150)
 
 </code></pre>
 
-<h4 id="register95core95intents_3">register_core_intents</h4>
+<h4 id="register95core95intents_5">register_core_intents</h4>
 <pre><code>
 def register_core_intents(self)
 
@@ -640,6 +850,341 @@ def register_core_intents(self)
 def subtract_mileage(self, lost_ground)
 
 </code></pre>
+
+<h2 id="module-tnalagmesmodelsworld">Module tnalagmes.models.world</h2>
+<h3 id="physicsengine">PhysicsEngine</h3>
+<p>None</p>
+<h4 id="add95connection">add_connection</h4>
+<pre><code>
+def add_connection(self, room, direction='front', message=None)
+
+</code></pre>
+
+<p>NOTES:</p>
+<p>TODO add object / npc to scene</p>
+<h4 id="get95item">get_item</h4>
+<pre><code>
+def get_item(self, item)
+
+</code></pre>
+
+<h4 id="handle95back">handle_back</h4>
+<pre><code>
+def handle_back(self, intent)
+
+</code></pre>
+
+<h4 id="handle95describe">handle_describe</h4>
+<pre><code>
+def handle_describe(self, intent)
+
+</code></pre>
+
+<p>:param intent:
+:return:</p>
+<h4 id="handle95down">handle_down</h4>
+<pre><code>
+def handle_down(self, intent)
+
+</code></pre>
+
+<h4 id="handle95east">handle_east</h4>
+<pre><code>
+def handle_east(self, intent)
+
+</code></pre>
+
+<h4 id="handle95front">handle_front</h4>
+<pre><code>
+def handle_front(self, intent)
+
+</code></pre>
+
+<h4 id="handle95get">handle_get</h4>
+<pre><code>
+def handle_get(self, intent)
+
+</code></pre>
+
+<h4 id="handle95left">handle_left</h4>
+<pre><code>
+def handle_left(self, intent)
+
+</code></pre>
+
+<h4 id="handle95look">handle_look</h4>
+<pre><code>
+def handle_look(self, intent)
+
+</code></pre>
+
+<h4 id="handle95north">handle_north</h4>
+<pre><code>
+def handle_north(self, intent)
+
+</code></pre>
+
+<h4 id="handle95northeast">handle_northeast</h4>
+<pre><code>
+def handle_northeast(self, intent)
+
+</code></pre>
+
+<h4 id="handle95northwest">handle_northwest</h4>
+<pre><code>
+def handle_northwest(self, intent)
+
+</code></pre>
+
+<h4 id="handle95right">handle_right</h4>
+<pre><code>
+def handle_right(self, intent)
+
+</code></pre>
+
+<h4 id="handle95south">handle_south</h4>
+<pre><code>
+def handle_south(self, intent)
+
+</code></pre>
+
+<h4 id="handle95southeast">handle_southeast</h4>
+<pre><code>
+def handle_southeast(self, intent)
+
+</code></pre>
+
+<h4 id="handle95southweast">handle_southweast</h4>
+<pre><code>
+def handle_southweast(self, intent)
+
+</code></pre>
+
+<h4 id="handle95talk">handle_talk</h4>
+<pre><code>
+def handle_talk(self, intent)
+
+</code></pre>
+
+<h4 id="handle95up">handle_up</h4>
+<pre><code>
+def handle_up(self, intent)
+
+</code></pre>
+
+<h4 id="handle95west">handle_west</h4>
+<pre><code>
+def handle_west(self, intent)
+
+</code></pre>
+
+<h4 id="place95player">place_player</h4>
+<pre><code>
+def place_player(self, scene_name=None)
+
+</code></pre>
+
+<h4 id="register95default95intents_3">register_default_intents</h4>
+<pre><code>
+def register_default_intents(self)
+
+</code></pre>
+
+<h4 id="talk95to95npc">talk_to_npc</h4>
+<pre><code>
+def talk_to_npc(self, npc, utterance='hello')
+
+</code></pre>
+
+<h3 id="scene">Scene</h3>
+<p>None</p>
+<h4 id="add95connection_1">add_connection</h4>
+<pre><code>
+def add_connection(self, room, direction='front', message=None)
+
+</code></pre>
+
+<p>NOTES:</p>
+<p>TODO add object / npc to scene</p>
+<h4 id="get95item_1">get_item</h4>
+<pre><code>
+def get_item(self, item)
+
+</code></pre>
+
+<h4 id="handle95get_1">handle_get</h4>
+<pre><code>
+def handle_get(self, intent)
+
+</code></pre>
+
+<h4 id="handle95look_1">handle_look</h4>
+<pre><code>
+def handle_look(self, intent)
+
+</code></pre>
+
+<h4 id="handle95talk_1">handle_talk</h4>
+<pre><code>
+def handle_talk(self, intent)
+
+</code></pre>
+
+<h4 id="register95default95intents_4">register_default_intents</h4>
+<pre><code>
+def register_default_intents(self)
+
+</code></pre>
+
+<h4 id="talk95to95npc_1">talk_to_npc</h4>
+<pre><code>
+def talk_to_npc(self, npc, utterance='hello')
+
+</code></pre>
+
+<h3 id="world">World</h3>
+<p>None</p>
+<h4 id="add95connection_2">add_connection</h4>
+<pre><code>
+def add_connection(self, room, direction='front', message=None)
+
+</code></pre>
+
+<p>NOTES:</p>
+<p>TODO add object / npc to scene</p>
+<h4 id="get95item_2">get_item</h4>
+<pre><code>
+def get_item(self, item)
+
+</code></pre>
+
+<h4 id="handle95back_1">handle_back</h4>
+<pre><code>
+def handle_back(self, intent)
+
+</code></pre>
+
+<h4 id="handle95describe_1">handle_describe</h4>
+<pre><code>
+def handle_describe(self, intent)
+
+</code></pre>
+
+<p>:param intent:
+:return:</p>
+<h4 id="handle95down_1">handle_down</h4>
+<pre><code>
+def handle_down(self, intent)
+
+</code></pre>
+
+<h4 id="handle95east_1">handle_east</h4>
+<pre><code>
+def handle_east(self, intent)
+
+</code></pre>
+
+<h4 id="handle95front_1">handle_front</h4>
+<pre><code>
+def handle_front(self, intent)
+
+</code></pre>
+
+<h4 id="handle95get_2">handle_get</h4>
+<pre><code>
+def handle_get(self, intent)
+
+</code></pre>
+
+<h4 id="handle95left_1">handle_left</h4>
+<pre><code>
+def handle_left(self, intent)
+
+</code></pre>
+
+<h4 id="handle95look_2">handle_look</h4>
+<pre><code>
+def handle_look(self, intent)
+
+</code></pre>
+
+<h4 id="handle95north_1">handle_north</h4>
+<pre><code>
+def handle_north(self, intent)
+
+</code></pre>
+
+<h4 id="handle95northeast_1">handle_northeast</h4>
+<pre><code>
+def handle_northeast(self, intent)
+
+</code></pre>
+
+<h4 id="handle95northwest_1">handle_northwest</h4>
+<pre><code>
+def handle_northwest(self, intent)
+
+</code></pre>
+
+<h4 id="handle95right_1">handle_right</h4>
+<pre><code>
+def handle_right(self, intent)
+
+</code></pre>
+
+<h4 id="handle95south_1">handle_south</h4>
+<pre><code>
+def handle_south(self, intent)
+
+</code></pre>
+
+<h4 id="handle95southeast_1">handle_southeast</h4>
+<pre><code>
+def handle_southeast(self, intent)
+
+</code></pre>
+
+<h4 id="handle95southweast_1">handle_southweast</h4>
+<pre><code>
+def handle_southweast(self, intent)
+
+</code></pre>
+
+<h4 id="handle95talk_2">handle_talk</h4>
+<pre><code>
+def handle_talk(self, intent)
+
+</code></pre>
+
+<h4 id="handle95up_1">handle_up</h4>
+<pre><code>
+def handle_up(self, intent)
+
+</code></pre>
+
+<h4 id="handle95west_1">handle_west</h4>
+<pre><code>
+def handle_west(self, intent)
+
+</code></pre>
+
+<h4 id="place95player_1">place_player</h4>
+<pre><code>
+def place_player(self, scene_name=None)
+
+</code></pre>
+
+<h4 id="register95default95intents_5">register_default_intents</h4>
+<pre><code>
+def register_default_intents(self)
+
+</code></pre>
+
+<h4 id="talk95to95npc_2">talk_to_npc</h4>
+<pre><code>
+def talk_to_npc(self, npc, utterance='hello')
+
+</code></pre>
               
             </div>
           </div>
@@ -647,10 +1192,10 @@ def subtract_mileage(self, lost_ground)
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../tnalagmes.games/" class="btn btn-neutral float-right" title="games">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../tnalagmes.models.agents/" class="btn btn-neutral float-right" title="agents">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
-        <a href="../tnalagmes.models.world/" class="btn btn-neutral" title="world"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../tnalagmes.lang.parse_de/" class="btn btn-neutral" title="parse_de"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -676,10 +1221,10 @@ def subtract_mileage(self, lost_ground)
     <span class="rst-current-version" data-toggle="rst-current-version">
       
       
-        <span><a href="../tnalagmes.models.world/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+        <span><a href="../tnalagmes.lang.parse_de/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
       
-        <span style="margin-left: 15px"><a href="../tnalagmes.games/" style="color: #fcfcfc">Next &raquo;</a></span>
+        <span style="margin-left: 15px"><a href="../tnalagmes.models.agents/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>

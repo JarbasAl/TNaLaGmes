@@ -8,7 +8,7 @@
   
   
   <link rel="shortcut icon" href="../img/favicon.ico">
-  <title>signal - tnalagmes</title>
+  <title>en-us - tnalagmes</title>
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   <link rel="stylesheet" href="../css/theme.css" type="text/css" />
@@ -17,8 +17,8 @@
   
   <script>
     // Current page data
-    var mkdocs_page_name = "signal";
-    var mkdocs_page_input_path = "tnalagmes.util.signal.md";
+    var mkdocs_page_name = "en-us";
+    var mkdocs_page_input_path = "tnalagmes.locale.en-us.md";
     var mkdocs_page_url = null;
   </script>
   
@@ -230,13 +230,19 @@
                     
     <a class="" href="../tnalagmes.locale/">locale</a>
                 </li>
-                <li class="">
+                <li class=" current">
                     
     <span class="caption-text">en-us</span>
     <ul class="subnav">
-                <li class="toctree-l3">
+                <li class="toctree-l3 current">
                     
-    <a class="" href="../tnalagmes.locale.en-us/">en-us</a>
+    <a class="current" href="./">en-us</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l4"><a href="#module-tnalagmeslocaleen-us">Module tnalagmes.locale.en-us</a></li>
+    
+
+    </ul>
                 </li>
     </ul>
                 </li>
@@ -270,29 +276,9 @@
                     
     <a class="" href="../tnalagmes.util.phonemes/">phonemes</a>
                 </li>
-                <li class=" current">
+                <li class="">
                     
-    <a class="current" href="./">signal</a>
-    <ul class="subnav">
-            
-    <li class="toctree-l3"><a href="#module-tnalagmesutilsignal">Module tnalagmes.util.signal</a></li>
-    
-        <ul>
-        
-            <li><a class="toctree-l4" href="#check95for95signal">check_for_signal</a></li>
-        
-            <li><a class="toctree-l4" href="#create95file">create_file</a></li>
-        
-            <li><a class="toctree-l4" href="#create95signal">create_signal</a></li>
-        
-            <li><a class="toctree-l4" href="#ensure95directory95exists">ensure_directory_exists</a></li>
-        
-            <li><a class="toctree-l4" href="#get95ipc95directory">get_ipc_directory</a></li>
-        
-        </ul>
-    
-
-    </ul>
+    <a class="" href="../tnalagmes.util.signal/">signal</a>
                 </li>
                 <li class="">
                     
@@ -350,11 +336,15 @@
     
       
         
-          <li>util &raquo;</li>
+          <li>en-us &raquo;</li>
+        
+      
+        
+          <li>locale &raquo;</li>
         
       
     
-    <li>signal</li>
+    <li>en-us</li>
     <li class="wy-breadcrumbs-aside">
       
     </li>
@@ -364,47 +354,7 @@
           <div role="main">
             <div class="section">
               
-                <h2 id="module-tnalagmesutilsignal">Module tnalagmes.util.signal</h2>
-<h3 id="check95for95signal">check_for_signal</h3>
-<p><code>def check_for_signal(signal_name, sec_lifetime=0)</code></p>
-<p>See if a named signal exists</p>
-<p>Args:
-    signal_name (str): The signal's name.  Must only contain characters
-        valid in filenames.
-    sec_lifetime (int, optional): How many seconds the signal should
-        remain valid.  If 0 or not specified, it is a single-use signal.
-        If -1, it never expires.</p>
-<p>Returns:
-    bool: True if the signal is defined, False otherwise </p>
-<h3 id="create95file">create_file</h3>
-<p><code>def create_file(filename)</code></p>
-<p>Create the file filename and create any directories needed</p>
-<p>Args:
-    filename: Path to the file to be created </p>
-<h3 id="create95signal">create_signal</h3>
-<p><code>def create_signal(signal_name)</code></p>
-<p>Create a named signal</p>
-<p>Args:
-    signal_name (str): The signal's name.  Must only contain characters
-        valid in filenames. </p>
-<h3 id="ensure95directory95exists">ensure_directory_exists</h3>
-<p><code>def ensure_directory_exists(directory, domain=None)</code></p>
-<p>Create a directory and give access rights to all</p>
-<p>Args:
-    domain (str): The IPC domain.  Basically a subdirectory to prevent
-        overlapping signal filenames.</p>
-<p>Returns:
-    str: a path to the directory </p>
-<h3 id="get95ipc95directory">get_ipc_directory</h3>
-<p><code>def get_ipc_directory(domain=None, dir=None)</code></p>
-<p>Get the directory used for Inter Process Communication</p>
-<p>Files in this folder can be accessed by different processes on the
-machine.  Useful for communication.  This is often a small RAM disk.</p>
-<p>Args:
-    domain (str): The IPC domain.  Basically a subdirectory to prevent
-        overlapping signal filenames.</p>
-<p>Returns:
-    str: a path to the IPC directory </p>
+                <h2 id="module-tnalagmeslocaleen-us">Module tnalagmes.locale.en-us</h2>
               
             </div>
           </div>
@@ -412,10 +362,10 @@ machine.  Useful for communication.  This is often a small RAM disk.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../tnalagmes.util.log/" class="btn btn-neutral float-right" title="log">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../tnalagmes.intents/" class="btn btn-neutral float-right" title="intents">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
-        <a href="../tnalagmes.util.phonemes/" class="btn btn-neutral" title="phonemes"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../tnalagmes.locale/" class="btn btn-neutral" title="locale"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -441,10 +391,10 @@ machine.  Useful for communication.  This is often a small RAM disk.</p>
     <span class="rst-current-version" data-toggle="rst-current-version">
       
       
-        <span><a href="../tnalagmes.util.phonemes/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+        <span><a href="../tnalagmes.locale/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
       
-        <span style="margin-left: 15px"><a href="../tnalagmes.util.log/" style="color: #fcfcfc">Next &raquo;</a></span>
+        <span style="margin-left: 15px"><a href="../tnalagmes.intents/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>
