@@ -1,4 +1,5 @@
-from tnalagmes.engines.oregon75 import Oregon75Engine, Calendar, SimpleInventory
+from tnalagmes.engines.oregon75 import Oregon75Engine, SimpleInventory
+from tnalagmes.models.objects import Calendar
 from tnalagmes.data.zombie_survival_data import GAME_EVENTS, RANDOM_EVENTS, TERMINOLOGY
 
 

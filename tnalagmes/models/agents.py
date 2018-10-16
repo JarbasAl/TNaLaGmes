@@ -19,6 +19,16 @@ class NPC(TNaLaGmesConstruct):
     cast spell
     """
     def __init__(self, name, health, mana=0, attack=1, magic=None, inventory=None):
+        """
+
+        Args:
+            name:
+            health:
+            mana:
+            attack:
+            magic:
+            inventory:
+        """
         TNaLaGmesConstruct.__init__(self, "NPC")
         self.items = inventory or Inventory()
         self.max_hp = health
@@ -75,23 +85,51 @@ class NPC(TNaLaGmesConstruct):
                                      handler=self.handle_mileage)
 
     def attack(self):
+        """
+
+        Returns:
+
+        """
         return random.randrange(self.attack_low, self.attack_high)
 
     def take_damage(self, dmg):
+        """
+
+        Args:
+            dmg:
+
+        Returns:
+
+        """
         self.hp -= dmg
         if self.hp < 0:
             self.hp = 0
         return self.hp
 
     def heal(self, dmg):
+        """
+
+        Args:
+            dmg:
+        """
         self.hp += dmg
         if self.hp > self.max_hp:
             self.hp = self.max_hp
 
     def spend_mana(self, cost):
+        """
+
+        Args:
+            cost:
+        """
         self.mp -= cost
 
     def cast_spell(self):
+        """
+
+        Returns:
+
+        """
         if not len(self.magic):
             return "", 0
         spell = random.choice(self.magic)
@@ -105,93 +143,155 @@ class NPC(TNaLaGmesConstruct):
             return spell, magic_dmg
 
     def register_default_intents(self):
+        """
+
+        """
 
         def hello(intent):
+            """
+
+            Args:
+                intent:
+
+            Returns:
+
+            """
             return "hello"
 
         self.register_intent("hello", ["hi", "hey", "hello", "how are you", "yo"], hello)
 
 
 class Agent(TNaLaGmesEngine):
+    """
+    """
     def __init__(self, name="you", autostart=False):
+        """
+
+        Args:
+            name:
+            autostart:
+        """
         TNaLaGmesEngine.__init__(self)
         self.name = name
         if autostart:
             self._thread.start()  # start agent
 
     def interact_with(self, construct):
+        """
+
+        Args:
+            construct:
+        """
         self.interacting_with = construct
 
     def look_to(self, direction):
+        """
+
+        Args:
+            direction:
+        """
         direction = self.direction_to_int(direction)
         if direction is not None:
             self.direction = direction
 
-    def attack(self):
-        return random.randrange(self.attack_low, self.attack_high)
 
     def take_damage(self, dmg):
+        """
+
+        Args:
+            dmg:
+
+        Returns:
+
+        """
         self.hp -= dmg
         if self.hp < 0:
             self.hp = 0
         return self.hp
 
-    def heal(self, dmg):
-        self.hp += dmg
-        if self.hp > self.max_hp:
-            self.hp = self.max_hp
 
-    def spend_mana(self, cost):
-        self.mp -= cost
-
-    def cast_spell(self):
-        if not len(self.magic):
-            return "", 0
-        spell = random.choice(self.magic)
-        magic_dmg = spell.attack()
-
-        pct = self.hp / self.max_hp * 100
-
-        if self.mp < spell.cost or spell.type == "white" and pct > 50:
-            self.cast_spell()
-        else:
-            return spell, magic_dmg
 
     def handle_hello(self, intent):
+        """
+
+        Args:
+            intent:
+
+        Returns:
+
+        """
         return "hello world"
 
     def register_default_intents(self):
+        """
+
+        """
 
         self.register_intent("hello", ["hi", "hey", "hello", "how are you", "yo"], self.handle_hello)
 
     def on_turn(self):
+        """
+
+        """
         print("agentt should perform action here")
 
     def on_start(self):
+        """
+
+        """
         print("agent ready")
 
 
 class ChatAgent(Agent):
+    """
+    """
     def __init__(self, name):
+        """
+
+        Args:
+            name:
+        """
         Agent.__init__(self, name)
         self.chat_handler = None
 
     def on_turn(self):
+        """
+
+        """
         if not self.waiting_for_user:
             self.output = self.chat_handler(self.input)
         self.waiting_for_user = True
 
     def on_start(self):
+        """
+
+        """
         if self.chat_handler is None:
             handler = all_the_chatbots.bot_map().get(self.name)
             if not handler:
                 def handler(text):
+                    """
+
+                    Args:
+                        text:
+
+                    Returns:
+
+                    """
                     return "?"
             self.chat_handler = handler
         self.submit_command("what is your name?")
 
     @staticmethod
     def create_chatbot(name=None):
+        """
+
+        Args:
+            name:
+
+        Returns:
+
+        """
         name = name or random.choice(all_the_chatbots.bot_list())
         return ChatAgent(name=name)
 

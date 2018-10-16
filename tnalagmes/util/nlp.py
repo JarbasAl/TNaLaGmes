@@ -12,6 +12,14 @@ PRONOUNS_EN = ["i", "we", "me", "us", "you", "they", "them", "she", "he", "it", 
 
 
 def NER(text):
+    """
+
+    Args:
+        text:
+
+    Returns:
+
+    """
     ents = []
     # TODO on device
     try:
@@ -27,6 +35,14 @@ def NER(text):
 
 
 def replace_coreferences(text):
+    """
+
+    Args:
+        text:
+
+    Returns:
+
+    """
     # TODO on device
     # "My sister has a dog. She loves him." -> "My sister has a dog. My sister loves a dog."
     for w in text.split(" "):
@@ -51,8 +67,10 @@ def textual_entailment(premise, hypothesis):
     Rather than pre-trained Glove vectors, this model uses ELMo embeddings,
     which are completely character based and improve performance by 2%
 
-    :param premise:
-    :param hypotheses:
+    Args:
+        premise: 
+        hypotheses: 
+
     :return:
     """
     url = ALLENNLP_URL + "textual-entailment"

@@ -11,8 +11,18 @@ import json
 
 
 class Event(TNaLaGmesConstruct):
+    """
+    """
 
     def __init__(self, name="", intro="", conclusion="", handler=None):
+        """
+
+        Args:
+            name:
+            intro:
+            conclusion:
+            handler:
+        """
         TNaLaGmesConstruct.__init__(self, "event")
         self._name = name
         self._intro = intro
@@ -23,25 +33,56 @@ class Event(TNaLaGmesConstruct):
 
     @property
     def num_triggers(self):
+        """
+
+        Returns:
+
+        """
         return self._num_triggers
 
     @property
     def name(self):
+        """
+
+        Returns:
+
+        """
         return self._name
 
     @property
     def intro(self):
+        """
+
+        Returns:
+
+        """
         return self._intro
 
     @property
     def conclusion(self):
+        """
+
+        Returns:
+
+        """
         return self._conclusion
 
     def add_field(self, name, data=None):
+        """
+
+        Args:
+            name:
+            data:
+        """
         # TODO set property
         self.fields[name] = data
 
     def from_json(self, data):
+        """
+
+        Args:
+            data:
+        """
         for k in data:
             if k == "_name":
                 self._name = data[k]
@@ -54,6 +95,11 @@ class Event(TNaLaGmesConstruct):
 
     @property
     def data(self):
+        """
+
+        Returns:
+
+        """
         event_template = {
 
             "_name": self._name,
@@ -65,6 +111,14 @@ class Event(TNaLaGmesConstruct):
         return event_template
 
     def trigger(self, data=None):
+        """
+
+        Args:
+            data:
+
+        Returns:
+
+        """
         if self.event_handler is not None:
             try:
                 return self.event_handler(data)
@@ -76,16 +130,28 @@ class Event(TNaLaGmesConstruct):
         return self.output
 
     def bind_handler(self, event_handler=None):
+        """
+
+        Args:
+            event_handler:
+        """
         self.event_handler = event_handler
 
 
 class TNaLaGmesEngine(TNaLaGmesConstruct):
+    """
+    """
     TERMINOLOGY = TERMINOLOGY
     DATA = GAME_EVENTS
     RANDOM_EVENTS = RANDOM_EVENTS
     name = "TNaLaGmesEngine"
 
     def __init__(self, from_json=True):
+        """
+
+        Args:
+            from_json:
+        """
         TNaLaGmesConstruct.__init__(self, "game_engine", scene=self)
         self.from_json = from_json
         self.random_events = []
@@ -96,20 +162,37 @@ class TNaLaGmesEngine(TNaLaGmesConstruct):
         self._thread.setDaemon(True)
 
     def on_random_event(self):
+        """
+
+        """
         event = random.choice(self.random_events)
         self.output = event.trigger()
 
     @classmethod
     def get_entity(cls, text):
+        """
+
+        Args:
+            text:
+
+        Returns:
+
+        """
         return random.choice(cls.TERMINOLOGY.get(text, [""]))
 
     def pprint_data(self):
+        """
+
+        """
         data = {"random_events": self.RANDOM_EVENTS,
                 "terminology": self.TERMINOLOGY,
                 "turn_data": self.DATA}
         pprint(data)
 
     def register_core_intents(self):
+        """
+
+        """
         # TODO translate options strings to 1, 2, 3, 4
 
         # engine interface
@@ -120,6 +203,11 @@ class TNaLaGmesEngine(TNaLaGmesConstruct):
         self.register_intent("quit", ["quit", "exit", "shutdown", "abort"], self.handle_quit)
 
     def register_event(self, event_object):
+        """
+
+        Args:
+            event_object:
+        """
         if isinstance(event_object, Event):
             self.random_events.append(event_object)
         elif isinstance(event_object, dict):
@@ -140,6 +228,12 @@ class TNaLaGmesEngine(TNaLaGmesConstruct):
             self.random_events.append(e)
 
     def register_from_json(self, dictionary, event_handler=None):
+        """
+
+        Args:
+            dictionary:
+            event_handler:
+        """
         event = Event()
         event.from_json(dictionary)
         if event_handler:
@@ -149,7 +243,10 @@ class TNaLaGmesEngine(TNaLaGmesConstruct):
     def register_events(self):
         """
         load default events or from jsom
-        :param from_json:
+
+        Args:
+            from_json: 
+
         :return:
         """
         if self.from_json:
@@ -159,10 +256,16 @@ class TNaLaGmesEngine(TNaLaGmesConstruct):
                 self.register_event(event)
 
     def intro(self):
+        """
+
+        """
         self.output = self.DATA.get("intro",{}).get("intro", "")
         self.output = self.DATA.get("intro", {}).get("conclusion", "")
 
     def on_turn(self):
+        """
+
+        """
         self.output = self.calendar.pretty_date
 
         self.output = "total progress: " + str(self.tracker.mileage)
@@ -177,32 +280,59 @@ class TNaLaGmesEngine(TNaLaGmesConstruct):
         self.calendar.advance_date()
 
     def on_win(self):
+        """
+
+        """
         self.calendar.rollback_date(int(self.tracker.last_turn_fraction * self.calendar.days_per_turn))
         self.output = self.calendar.pretty_date
         self.running = False
 
     def on_lose(self):
+        """
+
+        """
         self.running = False
 
     def on_damage(self):
+        """
+
+        """
         pass
 
     def on_chance_encounter(self):
+        """
+
+        """
         pass
 
     def on_easy_difficulty(self):
+        """
+
+        """
         pass
 
     def on_medium_difficulty(self):
+        """
+
+        """
         pass
 
     def on_hard_difficulty(self):
+        """
+
+        """
         pass
 
     def on_shop(self):
+        """
+
+        """
         pass
 
     def on_game_over(self):
+        """
+
+        """
         # Turns have been exhausted or objective has been reached
         if self.tracker.completed:
             self.on_win()
@@ -211,6 +341,11 @@ class TNaLaGmesEngine(TNaLaGmesConstruct):
         self.running = False
 
     def on_difficulty_modifier(self):
+        """
+
+        Returns:
+
+        """
         if not self.tracker.difficulty_triggered():
             return
         self.on_easy_difficulty()
@@ -220,10 +355,21 @@ class TNaLaGmesEngine(TNaLaGmesConstruct):
             self.on_hard_difficulty()
 
     def manual_fix_parse(self, text):
+        """
+
+        Args:
+            text:
+
+        Returns:
+
+        """
         # any parsing ou might want to reading from game data, ie replace {inv.money}
         return text
 
     def run(self):
+        """
+
+        """
         self._thread.start()
         while self.running:
             if self.waiting_for_user:
@@ -231,10 +377,18 @@ class TNaLaGmesEngine(TNaLaGmesConstruct):
                 self.parse_command(command)
 
     def submit_command(self, text=""):
+        """
+
+        Args:
+            text:
+        """
         self.input = text
         self.waiting_for_user = False
 
     def _run(self):
+        """
+
+        """
         self.running = True
         self.on_start()
         self.register_events()
@@ -245,38 +399,99 @@ class TNaLaGmesEngine(TNaLaGmesConstruct):
         self.running = False
 
     def save(self, path=None):
+        """
+
+        Args:
+            path:
+        """
         pass
 
     def load(self, path=None):
+        """
+
+        Args:
+            path:
+        """
         pass
 
     def quit(self):
+        """
+
+        """
         if self.ask_yes_no(self.DATA.get("quit_message",
                                          "really want to quit?")):
             self.running = False
             self.on_game_over()
 
     def handle_quit(self, intent):
+        """
+
+        Args:
+            intent:
+
+        Returns:
+
+        """
         self.quit()
         return "game exited"
 
     def handle_save(self, intent):
+        """
+
+        Args:
+            intent:
+
+        Returns:
+
+        """
         self.save(intent.get("file"))
         return "game saved"
 
     def handle_load(self, intent):
+        """
+
+        Args:
+            intent:
+
+        Returns:
+
+        """
         self.load(intent.get("file"))
         return "game loaded"
 
     def handle_import(self, intent):
+        """
+
+        Args:
+            intent:
+
+        Returns:
+
+        """
         self.import_game_data(intent["file"])
         return "game data imported"
 
     def handle_export(self, intent):
+        """
+
+        Args:
+            intent:
+
+        Returns:
+
+        """
         self.export_game_data(intent["file"])
         return "game data exported"
 
     def ask_world(self, utterance):
+        """
+
+        Args:
+            utterance:
+
+        Returns:
+
+        """
         # query self intents first
         intents = self.calc_intents(utterance)
         answer = ""
@@ -297,9 +512,19 @@ class TNaLaGmesEngine(TNaLaGmesConstruct):
 
     @property
     def talking_objects(self):
+        """
+
+        Returns:
+
+        """
         return []
 
     def parse_command(self, utterance):
+        """
+
+        Args:
+            utterance:
+        """
         # parse intent
         answer = self.ask_world(utterance)
         if answer.strip().replace(".", "") != "?":
@@ -311,6 +536,11 @@ class TNaLaGmesEngine(TNaLaGmesConstruct):
 
     @classmethod
     def export_game_data(cls, path=None):
+        """
+
+        Args:
+            path:
+        """
         path = path or join(expanduser("~"),
                             "TextSurvivalGames")
         if not exists(path):
@@ -325,6 +555,11 @@ class TNaLaGmesEngine(TNaLaGmesConstruct):
 
     @classmethod
     def import_game_data(cls, path=None):
+        """
+
+        Args:
+            path:
+        """
         path = path or join(expanduser("~"),
                             "TextSurvivalGames")
         file = join(path, cls.name + ".json")
@@ -339,5 +574,8 @@ class TNaLaGmesEngine(TNaLaGmesConstruct):
                                          cls.RANDOM_EVENTS)
 
     def on_start(self):
+        """
+
+        """
         if self.ask_yes_no("Do you need instructions?"):
             self.intro()

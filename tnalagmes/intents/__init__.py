@@ -202,7 +202,8 @@ class TNaLaGmesBaseIntentParser(object):
         return None
 
     def register_keyword_intent(self, name, required=None, optionals=None,
-                                handler=None, ignore_defaults=False, validator=None):
+                                handler=None, ignore_defaults=False,
+                                validator=None):
         """
         rule based intent,
 
@@ -218,9 +219,10 @@ class TNaLaGmesBaseIntentParser(object):
         :param ignore_defaults:
         :return:
         """
-        required, optionals = TNaLaGmesIntentContainer.normalize_keyword_input(name, required,
-                                                                               optionals,
-                                                                               ignore_defaults)
+        required, optionals = TNaLaGmesIntentContainer.normalize_keyword_input(
+            name, required,
+            optionals,
+            ignore_defaults)
 
         min_sentence = " ".join(required.keys())
 
@@ -290,16 +292,19 @@ class TNaLaGmesAdaptIntentParser(TNaLaGmesBaseIntentParser):
             best_intent["intent_engine"] = "adapt"
             best_intent["intent_name"] = best_intent["intent_type"]
             # cast into intent object
-            intent = self.intents.get(best_intent.get("intent_name", ""), best_intent)
+            intent = self.intents.get(best_intent.get("intent_name", ""),
+                                      best_intent)
             intent.from_json(best_intent)
             return intent
         return None
 
     def register_keyword_intent(self, name, required=None, optionals=None,
-                                handler=None, ignore_defaults=False, validator=None):
-        required, optionals = TNaLaGmesIntentContainer.normalize_keyword_input(name, required,
-                                                                               optionals,
-                                                                               ignore_defaults)
+                                handler=None, ignore_defaults=False,
+                                validator=None):
+        required, optionals = TNaLaGmesIntentContainer.normalize_keyword_input(
+            name, required,
+            optionals,
+            ignore_defaults)
         intent_name = self.name + ':' + name
         intent = IntentBuilder(intent_name)
 
@@ -338,7 +343,8 @@ class TNaLaGmesPadatiousIntentParser(TNaLaGmesBaseIntentParser):
         if best_intent and best_intent.get('conf', 0.0) > 0.0:
             best_intent["intent_engine"] = self.name
             # cast into intent object (update confidence in stored object)
-            intent = self.intents.get(best_intent.get("intent_name", ""), best_intent)
+            intent = self.intents.get(best_intent.get("intent_name", ""),
+                                      best_intent)
             intent.from_json(best_intent)
             return intent
         return None
@@ -348,12 +354,15 @@ class TNaLaGmesPadatiousIntentParser(TNaLaGmesBaseIntentParser):
         self.engine.train()
 
     def register_keyword_intent(self, name, required=None, optionals=None,
-                                handler=None, ignore_defaults=False, validator=None):
+                                handler=None, ignore_defaults=False,
+                                validator=None):
         pass
 
     def register_intent(self, name, samples=None, handler=None,
                         ignore_defaults=False, validator=None):
-        samples = TNaLaGmesIntentContainer.normalize_samples_input(name, samples, ignore_defaults)
+        samples = TNaLaGmesIntentContainer.normalize_samples_input(name,
+                                                                   samples,
+                                                                   ignore_defaults)
         intent_name = self.name + ':' + name
         self.engine.add_intent(intent_name, samples)
         data = {
@@ -397,7 +406,7 @@ class TNaLaGmesIntentContainer(object):
                                 handler=None,
                                 ignore_defaults=False):
         required, optionals = self.normalize_keyword_input(
-                name, required, optionals, ignore_defaults)
+            name, required, optionals, ignore_defaults)
         for engine in self.engine_list:
             engine.register_keyword_intent(name, required, optionals,
                                            handler, True)
@@ -487,7 +496,7 @@ class TNaLaGmesIntentContainer(object):
         # sentences are then reconstructed from parsetron matches
         # reconstructed sentences sent to intent parsers
         # used in disambiguation when validating intents
-        
+
         required, optionals = self.normalize_keyword_input(name, required=required, optionals=optionals)
         one_parse = None
 
@@ -546,7 +555,7 @@ class TNaLaGmesIntentContainer(object):
 
         # TODO check for multiple commands in sentence
         # waiting for py3 parsetron
-        #for p in self.parsers:
+        # for p in self.parsers:
         #    print(self.parsers[p]())
         #   from here extract disambiguation data to inject in intent
         #   rebuild new commands # TODO test how rebuilt commands look
@@ -570,7 +579,8 @@ class TNaLaGmesIntentContainer(object):
                     intent = TNaLaGmesIntent()
                     intent.from_json(inte)
                     inte = intent
-                inte.bind_question_validator(self.fetch_question_validator(inte))
+                inte.bind_question_validator(
+                    self.fetch_question_validator(inte))
                 if not inte.validate_question(utterance):
                     intent_list[idx] = None
 

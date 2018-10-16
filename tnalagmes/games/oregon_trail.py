@@ -1,5 +1,6 @@
-from tnalagmes.engines.oregon75 import Oregon75Engine, Calendar
+from tnalagmes.engines.oregon75 import Oregon75Engine
 from tnalagmes.data.oregon_trail_data import GAME_EVENTS, RANDOM_EVENTS, TERMINOLOGY
+from tnalagmes.models.objects import Calendar
 from datetime import date
 
 

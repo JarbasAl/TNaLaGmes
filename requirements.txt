@@ -4,6 +4,7 @@ padatious==0.4.5
 fann2==1.0.7
 python-dateutil
 mtranslate
+pronouncing
 requests
 psutil
 bs4
